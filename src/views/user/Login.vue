@@ -1,5 +1,5 @@
 <template>
-  <section class="section section-shaped section-lg my-0">
+  <section class="section section-shaped section-lg my-0 vh100">
     <div class="shape shape-style-1 bg-gradient-default">
       <span></span>
       <span></span>
@@ -25,39 +25,30 @@
               </div>
             </template>
             <template>
-              <div class="text-center text-muted my-4">
-                <h5 class="font-weight-bold">Giriş Yap</h5>
+              <div class="text-center text-muted mb-4 mt-2">
+                <small>Namerator Hesabınıza Giriş Yapın!</small>
               </div>
-              <form role="form">
-                <base-input alternative required v-model="email"
+              <form role="form" @keyup.enter="login">
+                <base-input alternative required v-model="email"  @click="errorMessage=''"
                             class="mb-3"
                             placeholder="Email"
                             addon-left-icon="ni ni-email-83">
                 </base-input>
-                <base-input alternative required v-model="password"
+                <base-input alternative required v-model="password" @click="errorMessage=''"
                             type="password"
                             placeholder="Password"
                             addon-left-icon="ni ni-lock-circle-open">
-
                 </base-input>
+                <base-alert type="danger" v-text="errorMessage" v-if="errorMessage"></base-alert>
                 <div class="text-center">
-                  <base-button @click.prevent="submit" type="primary" class="my-4">GİRİŞ</base-button>
+                  <base-button @click.prevent="login" type="primary" class="my-2">GİRİŞ</base-button>
                 </div>
               </form>
+              <div class="text-center small text-muted mt-2">
+               Hesabınız yok mu? <router-link :to="{name:'register'}">Hesap Oluştur</router-link>
+              </div>
             </template>
           </card>
-          <div class="row mt-3">
-            <div class="col-6">
-              <a href="#" class="text-light">
-                <small>Forgot password?</small>
-              </a>
-            </div>
-            <div class="col-6 text-right">
-              <a href="#" class="text-light">
-                <small>Create new account</small>
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -68,12 +59,23 @@ export default {
   data: () => {
     return {
       email: "",
-      password: ""
+      password: "",
+      errorMessage:""
     }
   },
   methods: {
-    submit() {
-      alert(this.email);
+    login () {
+      this.$store
+          .dispatch('login', {
+            email: this.email,
+            password: this.password
+          })
+          .then((e) => {
+            this.$router.push({ name: 'profile' })
+          })
+          .catch((err) => {
+            this.errorMessage=err.response.data.message[0];
+          })
     }
   }
 };

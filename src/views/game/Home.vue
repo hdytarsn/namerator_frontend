@@ -20,21 +20,8 @@
               <img src="img/brand/white.png" style="width: 200px;" class="img-fluid">
               <p class="lead text-white mt-4 mb-5"><b>Nameratör</b> bilgisayara karşı ya da arkadaşlarınızla oynayabileceğiniz bir isim bulma oyunudur.</p>
               <div class="btn-wrapper">
-                <router-link to="/game-settings" cla></router-link>
-                <base-button tag="a"
-                             href="https://demos.creative-tim.com/vue-argon-design-system/documentation"
-                             class="mb-3 mb-sm-0"
-                             type="info"
-                             icon="fa fa-code">
-                  Bilgisayar Karşı Oyna
-                </base-button>
-                <base-button tag="a"
-                             href=""
-                             class="mb-3 mb-sm-0"
-                             type="white"
-                             icon="ni ni-cloud-download-95">
-                  Arkadaşlarınla Oyna
-                </base-button>
+                <router-link :to="{name:'gameSettings' , params:{type:'single-player'}}" class="btn btn-info">Bilgisayara Karşı Oyna</router-link>
+                <router-link :to="{name:'gameSettings' , params:{type:'multi-player'}}" class="btn btn-white">Arkadaşlarınla Oyna</router-link>
               </div>
             </div>
           </div>

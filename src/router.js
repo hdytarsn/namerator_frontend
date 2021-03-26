@@ -13,80 +13,89 @@ import NotFound from "./views/error/404.vue";
 
 Vue.use(Router);
 
-export default new Router({
-    linkExactActiveClass: "active",
-    mode: 'history',
-    routes: [
-        {
-            path: "/",
-            name: "home",
-            components: {
-                header: AppHeader,
-                default: Home,
-            }
-        },
-        {
-            path: "/how-to-play",
-            name: "howToPlay",
-            components: {
-                header: AppHeader,
-                default: HowToPlay,
-                footer: AppFooter
-            }
-        },
-        {
-            path: "/game-rules",
-            name: "gameRules",
-            components: {
-                header: AppHeader,
-                default: GameRules,
-                footer: AppFooter
-            }
-        },
-        {
-            path: "/game-settings",
-            name: "gameSettings",
-            components: {
-                header: AppHeader,
-                default: GameSettings,
-                footer: AppFooter
-            }
-        },
-        {
-            path: "/profile",
-            name: "profile",
-            components: {
-                header: AppHeader,
-                default: Profile,
-                footer: AppFooter
-            }
-        },
-        {
-            path: "/login",
-            name: "login",
-            components: {
-                header: AppHeader,
-                default: Login,
-            }
-        },
-        {
-            path: "/register",
-            name: "register",
-            components: {
-                header: AppHeader,
-                default: Register,
-            }
-        }, {
-            path: "/:catchAll(.*)",
-            name: "notFound",
-            component: NotFound
+const routes = [
+    {
+        path: "/",
+        name: "home",
+        components: {
+            header: AppHeader,
+            default: Home,
         }
-    ],
-    scrollBehavior: to => {
-        if (to.hash) {
-            return {selector: to.hash};
-        } else {
-            return {x: 0, y: 0};
+    },
+    {
+        path: "/how-to-play",
+        name: "howToPlay",
+        components: {
+            header: AppHeader,
+            default: HowToPlay,
+            footer: AppFooter
         }
+    },
+    {
+        path: "/game-rules",
+        name: "gameRules",
+        components: {
+            header: AppHeader,
+            default: GameRules,
+            footer: AppFooter
+        }
+    },
+    {
+        path: "/game/settings/:type",
+        name: "gameSettings",
+        components: {
+            header: AppHeader,
+            default: GameSettings,
+            footer: AppFooter
+        }
+    },
+    {
+        path: "/profile",
+        name: "profile",
+        components: {
+            header: AppHeader,
+            default: Profile,
+            footer: AppFooter
+        },
+        meta: {
+            auth: true
+        },
+    },
+    {
+        path: "/login",
+        name: "login",
+        components: {
+            header: AppHeader,
+            default: Login,
+        }
+    },
+    {
+        path: "/register",
+        name: "register",
+        components: {
+            header: AppHeader,
+            default: Register,
+        }
+    }, {
+        path: "/:catchAll(.*)",
+        name: "notFound",
+        component: NotFound
     }
+];
+const router = new Router({
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
+})
+router.beforeEach((to, from, next) => {
+    const loggedIn = localStorage.getItem('user')
+    if (to.matched.some(record => record.meta.auth) && !loggedIn) {
+        next('/login')
+        return
+    }
+    next()
 });
+export default router;
+
+
+

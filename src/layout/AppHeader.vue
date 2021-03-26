@@ -23,7 +23,7 @@
             <span class="nav-link-inner--text font-weight-bold">Namerator Hakkında</span>
           </a>
           <div class="dropdown-menu-inner">
-            <router-link class="media d-flex align-items-center" to="/how-to-play">
+            <router-link class="media d-flex align-items-center" :to="{name:'howToPlay'}">
               <div class="icon icon-shape bg-gradient-primary rounded-circle text-white">
                 <i class="ni ni-spaceship"></i>
               </div>
@@ -33,7 +33,7 @@
                   oynayabileceğiniz bir isim bulma oyunudur.</p>
               </div>
             </router-link>
-            <router-link class="media d-flex align-items-center" to="/game-rules">
+            <router-link class="media d-flex align-items-center" :to="{name:'gameRules'}">
               <div class="icon icon-shape bg-gradient-warning rounded-circle text-white">
                 <i class="ni ni-ui-04"></i>
               </div>
@@ -47,13 +47,18 @@
         </base-dropdown>
       </ul>
       <ul class="navbar-nav align-items-lg-center ml-lg-auto">
-        <li class="nav-item d-none d-lg-block ml-lg-4">
-          <router-link to="/login" class="btn btn-neutral btn-icon">
+        <li class="nav-item  ml-lg-4">
+          <router-link :to="{name:isLogged?'profile':'login'}" class="btn btn-neutral btn-icon">
                 <span class="btn-inner--icon">
-                  <i class="fa fa-cloud-download mr-2"></i>
+                  <i class="fa fa-user mr-2"></i>
                 </span>
-            <span class="nav-link-inner--text">GİRİŞ YAP</span>
+            <span class="nav-link-inner--text">{{isLogged?this.$store.state.user.user.name:'GİRİŞ YAP'}}</span>
           </router-link>
+        </li>
+        <li>
+          <button class="btn btn-danger" type="button" @click="logout()" v-if="isLogged">
+            Çıkış Yap
+          </button>
         </li>
       </ul>
     </base-nav>
@@ -63,12 +68,23 @@
 import BaseNav from "@/components/BaseNav";
 import BaseDropdown from "@/components/BaseDropdown";
 import CloseButton from "@/components/CloseButton";
+import {mapGetters} from 'vuex';
 
 export default {
   components: {
     BaseNav,
     CloseButton,
     BaseDropdown
+  },
+  computed: {
+    ...mapGetters([
+      'isLogged'
+    ])
+  },
+  methods: {
+    logout () {
+      this.$store.dispatch('logout')
+    }
   }
 };
 </script>

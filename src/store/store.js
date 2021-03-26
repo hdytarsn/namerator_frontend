@@ -1,18 +1,47 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import axios from 'axios'
+import {constants} from './constants'
 
 Vue.use(Vuex);
+axios.defaults.baseURL = constants.API_BASE_URL;
+
 
 export const store = new Vuex.Store({
-    state:{
-        userDetail:{
-            id:1,
-            name:'Hidayet',
-            email:'',
+    state: {
+        user: null,
+        isGameStart: false,
+        gameConfig: {}
+    }, mutations: {
+        setUserData(state, userData) {
+            state.user = userData
+            localStorage.setItem('user', JSON.stringify(userData))
+            axios.defaults.headers.common.Authorization = `Bearer ${userData.token}`
         },
-        isGameStart:false,
-        gameConfig:{
-
+        clearUserData() {
+            localStorage.removeItem('user')
+            location.reload()
         }
+    }, actions: {
+        login({commit}, credentials) {
+            return axios
+                .post('/login', credentials)
+                .then(({data}) => {
+                    commit('setUserData', data)
+                })
+        },
+        register({commit}, credentials) {
+            return axios
+                .post('/register', credentials)
+                .then(({data}) => {
+                    commit('setUserData', data)
+                })
+        },
+        logout({commit}) {
+            commit('clearUserData')
+        }
+    },
+    getters: {
+        isLogged: state => !!state.user
     }
 })
