@@ -11,12 +11,20 @@ export const store = new Vuex.Store({
     state: {
         user: null,
         isGameStart: false,
-        gameConfig: {}
+        gameConfig: {},
+        speech: {
+            diagnosis: "",
+            currentState: "",
+        }
     }, mutations: {
         setUserData(state, userData) {
             state.user = userData
             localStorage.setItem('user', JSON.stringify(userData))
             axios.defaults.headers.common.Authorization = `Bearer ${userData.token}`
+        },
+        setSpeechData(state, speechData) {
+            state.speech.diagnosis = speechData.diagnosis;
+            state.speech.currentState = speechData.currentState;
         },
         clearUserData() {
             localStorage.removeItem('user')

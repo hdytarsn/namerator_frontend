@@ -6,6 +6,7 @@ import Home from "./views/game/Home.vue";
 import HowToPlay from "./views/information/HowToPlay.vue";
 import GameRules from "./views/information/GameRules.vue";
 import GameSettings from "./views/game/GameSettings";
+import PlayGame from "./views/game/PlayGame";
 import Login from "./views/user/Login.vue";
 import Register from "./views/user/Register.vue";
 import Profile from "./views/user/Profile.vue";
@@ -46,6 +47,15 @@ const routes = [
         components: {
             header: AppHeader,
             default: GameSettings,
+            footer: AppFooter
+        }
+    },
+    {
+        path: "/game/play",
+        name: "PlayGame",
+        components: {
+            header: AppHeader,
+            default: PlayGame,
             footer: AppFooter
         }
     },
