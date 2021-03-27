@@ -25,6 +25,7 @@
 <script>
 import BaseInput from "../../components/BaseInput";
 import recognition from "../../logic/recognition";
+import {echo} from "../../logic/wsListener";
 
 export default {
   data() {
@@ -32,14 +33,20 @@ export default {
       gameSettings: {}
     };
   },
-  methods:{
-    listen(){
+  methods: {
+    listen() {
       let diagnosis = new recognition({lang: "tr"});
       diagnosis.startListen();
     }
   },
   created() {
 
+  },
+  mounted() {
+    echo.channel('channel')
+        .listen('Test', (e) => {
+          console.log(e);
+        });
   },
   components: {
     BaseInput
