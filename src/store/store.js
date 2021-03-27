@@ -10,12 +10,19 @@ axios.defaults.baseURL = constants.API_BASE_URL;
 export const store = new Vuex.Store({
     state: {
         user: null,
-        isGameStart: false,
-        gameConfig: {},
-        speech: {
-            diagnosis: "",
-            currentState: "",
-        }
+        game: {
+            isGameStarted: false,
+            settings: {
+                username: null,
+                levelId: null,
+                languageId: null,
+                multiplayer: null,
+            },
+            speech: {
+                diagnosis: null,
+                currentState: null,
+            }
+        },
     }, mutations: {
         setUserData(state, userData) {
             state.user = userData
@@ -23,8 +30,11 @@ export const store = new Vuex.Store({
             axios.defaults.headers.common.Authorization = `Bearer ${userData.token}`
         },
         setSpeechData(state, speechData) {
-            state.speech.diagnosis = speechData.diagnosis;
-            state.speech.currentState = speechData.currentState;
+            state.game.speech.diagnosis = speechData.diagnosis;
+            state.game.speech.currentState = speechData.currentState;
+        },
+        setGameSettingsData(state, gameSettingsData) {
+            state.game.settings=gameSettingsData;
         },
         clearUserData() {
             localStorage.removeItem('user')

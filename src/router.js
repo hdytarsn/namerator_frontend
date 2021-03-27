@@ -51,7 +51,7 @@ const routes = [
     },
     {
         path: "/game/play",
-        name: "PlayGame",
+        name: "playGame",
         components: {
             header: AppHeader,
             default: PlayGame,

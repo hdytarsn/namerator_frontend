@@ -14,8 +14,8 @@
       <div class="row justify-content-center">
         <div class="col-lg-5">
 
-          <p>State:{{ this.$store.state.speech.currentState }}</p>
-          <p> diagnosis:{{ this.$store.state.speech.diagnosis }}</p>
+          <p>State:{{ this.$store.state.game.speech.currentState }}</p>
+          <p> diagnosis:{{ this.$store.state.game.speech.diagnosis }}</p>
           <button @click="listen">listen</button>
         </div>
       </div>

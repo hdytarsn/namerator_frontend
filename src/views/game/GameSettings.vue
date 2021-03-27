@@ -27,8 +27,7 @@
                   <img v-lazy="'/img/theme/team-2-800x800.jpg'" alt="Circle image"
                        class="img-fluid rounded-circle shadow" style="width: 150px;">
                   <base-input class="mt-5"
-                              disabled
-                              :value="'hido'"
+                              v-model="gameSettings.username"
                               inputClasses=" wd-50p"
                               valid
                               required
@@ -43,7 +42,7 @@
                   <div class="row no-gutters game-level-buttons">
                     <div class="col-sm-6 px-1" v-for="gameLevel in gameLevels" :key="gameLevel.id"
                          @click="setGameLevel(gameLevel)">
-                      <base-button class="wd-100p mb-2" :type="gameSettings.level.id==gameLevel.id?'success':'neutral'">
+                      <base-button class="wd-100p mb-2" :type="gameSettings.levelId==gameLevel.id?'success':'neutral'">
                         <img slot="icon" :src="gameLevel.img"/>
                         {{ gameLevel.name }}
                       </base-button>
@@ -51,22 +50,17 @@
                   </div>
 
                   <p class="badge badge-lg wd-100p badge-primary mt-3">Konuşma Dilini Seç!</p>
-                  <base-dropdown class="wd-100p">
-                    <base-button slot="title"
-                                 type="default"
-                                 class="dropdown-toggle wd-100p">
-                      <img :src="gameSettings.language.img"/> <b class="text-success mr-2">{{
-                        gameSettings.language.name
-                      }}</b>
-                    </base-button>
-                    <li v-for="speechLanguage in speechLanguages" :key="speechLanguage.id"
-                        @click="setGameLanguage(speechLanguage)">
-                        <span class="dropdown-item">
-                          <img :src="speechLanguage.img"/> {{ speechLanguage.name }}
-                        </span>
-                    </li>
-                  </base-dropdown>
 
+                  <div class="row no-gutters game-level-buttons">
+                    <div class="col-sm-6 px-1" v-for="speechLanguage in speechLanguages" :key="speechLanguage.id"
+                         @click="setGameLanguage(speechLanguage)">
+                      <base-button class="wd-100p mb-2"
+                                   :type="gameSettings.languageId===speechLanguage.id?'success':'neutral'">
+                        <img slot="icon" :src="speechLanguage.img"/>
+                        {{ speechLanguage.name }}
+                      </base-button>
+                    </div>
+                  </div>
                   <p class="badge badge-lg wd-100p badge-primary mt-3">Oyun Türünü Seç!</p>
                   <div class="row no-gutters game-level-buttons">
                     <div class="col-sm-6 px-1">
@@ -107,7 +101,7 @@
           <base-button class="wd-100p mt-3"
                        @click="startGame"
                        type="primary"
-                       disabled>
+                       >
             Oyunu Başlat
           </base-button>
         </div>
@@ -119,6 +113,8 @@
 import BaseInput from "../../components/BaseInput";
 import BaseDropdown from "../../components/BaseDropdown";
 import {gameConfig} from "../../store/gameConfig"
+import {checkGameSettingsToStartGame} from "../../helpers/helpers"
+import {store} from "../../store/store";
 
 export default {
   data() {
@@ -126,8 +122,9 @@ export default {
       gameLevels: gameConfig.LEVELS,
       speechLanguages: gameConfig.SPEECH_LANGUAGES,
       gameSettings: {
-        level: "",
-        language: "",
+        username: "",
+        levelId: "",
+        languageId: "",
         multiplayer: false
       }
     };
@@ -138,18 +135,21 @@ export default {
   },
   methods: {
     setGameLevel(gameLevel) {
-      this.gameSettings.level = gameLevel;
+      this.gameSettings.levelId = gameLevel.id;
     },
     setGameLanguage(speechLanguage) {
-      this.gameSettings.language = speechLanguage;
+      this.gameSettings.languageId = speechLanguage.id;
     },
     startGame() {
-
+      if (checkGameSettingsToStartGame(this.gameSettings)) {
+        this.$store.commit('setGameSettingsData', this.gameSettings);
+        this.$router.push({ name: 'playGame' })
+      }
     }
   }, mounted() {
     //set default gameConfig
-    this.gameSettings.level = gameConfig.LEVELS[0];
-    this.gameSettings.language = gameConfig.SPEECH_LANGUAGES[0];
+    this.gameSettings.levelId = gameConfig.LEVELS[0].id;
+    this.gameSettings.languageId = gameConfig.SPEECH_LANGUAGES[0].id;
   }
 };
 </script>
