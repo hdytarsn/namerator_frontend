@@ -1,93 +1,160 @@
 <template>
-    <section class="section section-shaped section-lg my-0">
-        <div class="shape shape-style-1 bg-gradient-default">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <div class="container pt-lg-md">
-            <div class="row justify-content-center">
-                <div class="col-lg-5">
-                    <card type="secondary" shadow
-                          header-classes="bg-white pb-5"
-                          body-classes="px-lg-5 py-lg-5"
-                          class="border-0">
-                        <template>
-                            <div class="text-muted text-center mb-3">
-                                <small>Sign in with</small>
-                            </div>
-                            <div class="btn-wrapper text-center">
-                                <base-button type="neutral">
-                                    <img slot="icon" src="img/icons/common/github.svg">
-                                    Github
-                                </base-button>
+  <section class="section section-shaped section-lg my-0 vh100">
+    <div class="shape shape-style-1 bg-gradient-default">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="container pt-lg-md">
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <card type="secondary" shadow
+                header-classes="bg-white pb-5"
+                body-classes="px-lg-5 py-lg-5"
+                class="border-0">
 
-                                <base-button type="neutral">
-                                    <img slot="icon" src="img/icons/common/google.svg">
-                                    Google
-                                </base-button>
-                            </div>
-                        </template>
-                        <template>
-                            <div class="text-center text-muted mb-4">
-                                <small>Or sign in with credentials</small>
-                            </div>
-                            <form role="form">
-                                <base-input alternative
-                                            class="mb-3"
-                                            placeholder="Email"
-                                            addon-left-icon="ni ni-email-83">
-                                </base-input>
-                                <base-input alternative
-                                            type="password"
-                                            placeholder="Password"
-                                            addon-left-icon="ni ni-lock-circle-open">
-                                </base-input>
-                                <base-checkbox>
-                                    Remember me
-                                </base-checkbox>
-                                <div class="text-center">
-                                    <base-button type="primary" class="my-4">Sign In</base-button>
-                                </div>
-                            </form>
-                        </template>
-                    </card>
-                    <div class="row mt-3">
-                        <div class="col-6">
-                            <a href="#" class="text-light">
-                                <small>Forgot password?</small>
-                            </a>
-                        </div>
-                        <div class="col-6 text-right">
-                            <a href="#" class="text-light">
-                                <small>Create new account</small>
-                            </a>
-                        </div>
-                    </div>
+            <template>
+              <div class="text-center text-muted mb-4">
+                <h3 class="font-weight-bold">Oyun Ayarları</h3>
+              </div>
+              <div class="row text-center">
+                <div class="col-md-6">
+                  <img v-lazy="'/img/theme/team-2-800x800.jpg'" alt="Circle image"
+                       class="img-fluid rounded-circle shadow" style="width: 150px;">
+                  <base-input class="mt-5"
+                              disabled
+                              :value="'hido'"
+                              inputClasses=" wd-50p"
+                              valid
+                              required
+                              alternative
+                              type="text"
+                              placeholder="Kullanıcı Adı"
+                              addon-left-icon="fa fa-user">
+                  </base-input>
                 </div>
-            </div>
+                <div class="col-md-6">
+                  <p class="badge badge-lg wd-100p badge-primary">Oyun Zorluğunu Seç!</p>
+                  <div class="row no-gutters game-level-buttons">
+                    <div class="col-sm-6 px-1" v-for="gameLevel in gameLevels" :key="gameLevel.id"
+                         @click="setGameLevel(gameLevel)">
+                      <base-button class="wd-100p mb-2" :type="gameSettings.level.id==gameLevel.id?'success':'neutral'">
+                        <img slot="icon" :src="gameLevel.img"/>
+                        {{ gameLevel.name }}
+                      </base-button>
+                    </div>
+                  </div>
+
+                  <p class="badge badge-lg wd-100p badge-primary mt-3">Konuşma Dilini Seç!</p>
+                  <base-dropdown class="wd-100p">
+                    <base-button slot="title"
+                                 type="default"
+                                 class="dropdown-toggle wd-100p">
+                      <img :src="gameSettings.language.img"/> <b class="text-success mr-2">{{
+                        gameSettings.language.name
+                      }}</b>
+                    </base-button>
+                    <li v-for="speechLanguage in speechLanguages" :key="speechLanguage.id"
+                        @click="setGameLanguage(speechLanguage)">
+                        <span class="dropdown-item">
+                          <img :src="speechLanguage.img"/> {{ speechLanguage.name }}
+                        </span>
+                    </li>
+                  </base-dropdown>
+
+                  <p class="badge badge-lg wd-100p badge-primary mt-3">Oyun Türünü Seç!</p>
+                  <div class="row no-gutters game-level-buttons">
+                    <div class="col-sm-6 px-1">
+                      <base-button @click="gameSettings.multiplayer=false" class="wd-100p mb-2"
+                                   :type="gameSettings.multiplayer?'neutral':'success'">
+                        <img slot="icon" src=""/>
+                        Bireysel
+                      </base-button>
+                    </div>
+                    <div class="col-sm-6 px-1">
+                      <base-button @click="gameSettings.multiplayer=true" class="wd-100p mb-2"
+                                   :type="gameSettings.multiplayer?'success':'neutral'">
+                        <img slot="icon" src=""/>
+                        Çok Oyunculu
+                      </base-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </card>
         </div>
-    </section>
+        <div class="col-lg-12 mt-3" v-if="gameSettings.multiplayer">
+          <card type="secondary" shadow
+                header-classes="bg-white pb-5"
+                body-classes="px-lg-5 py-lg-5"
+                class="border-0">
+
+            <template>
+              <div class="text-center text-muted mb-4">
+                <h3 class="font-weight-bold">Oda</h3>
+              </div>
+
+            </template>
+          </card>
+        </div>
+        <div class="col-lg-12">
+          <base-button class="wd-100p mt-3"
+                       @click="startGame"
+                       type="primary"
+                       disabled>
+            Oyunu Başlat
+          </base-button>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 <script>
 import BaseInput from "../../components/BaseInput";
+import BaseDropdown from "../../components/BaseDropdown";
+import {gameConfig} from "../../store/gameConfig"
+
 export default {
   data() {
     return {
+      gameLevels: gameConfig.LEVELS,
+      speechLanguages: gameConfig.SPEECH_LANGUAGES,
       gameSettings: {
-
+        level: "",
+        language: "",
+        multiplayer: false
       }
     };
   },
-  components:{
-    BaseInput
+  components: {
+    BaseInput,
+    BaseDropdown
+  },
+  methods: {
+    setGameLevel(gameLevel) {
+      this.gameSettings.level = gameLevel;
+    },
+    setGameLanguage(speechLanguage) {
+      this.gameSettings.language = speechLanguage;
+    },
+    startGame() {
+
+    }
+  }, mounted() {
+    //set default gameConfig
+    this.gameSettings.level = gameConfig.LEVELS[0];
+    this.gameSettings.language = gameConfig.SPEECH_LANGUAGES[0];
   }
 };
 </script>
-<style>
+<style scoped>
+.dropdown, .dropdown > button {
+  width: 100% !important;
+}
 </style>

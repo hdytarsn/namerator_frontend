@@ -20,8 +20,8 @@
               <img src="img/brand/white.png" style="width: 200px;" class="img-fluid">
               <p class="lead text-white mt-4 mb-5"><b>Nameratör</b> bilgisayara karşı ya da arkadaşlarınızla oynayabileceğiniz bir isim bulma oyunudur.</p>
               <div class="btn-wrapper">
-                <router-link :to="{name:'gameSettings' , params:{type:'single-player'}}" class="btn btn-info">Bilgisayara Karşı Oyna</router-link>
-                <router-link :to="{name:'gameSettings' , params:{type:'multi-player'}}" class="btn btn-white">Arkadaşlarınla Oyna</router-link>
+                <router-link :to="{name:'gameSettings' }" class="btn btn-info">Bilgisayara Karşı Oyna</router-link>
+                <router-link :to="{name:'gameSettings' }" class="btn btn-white">Arkadaşlarınla Oyna</router-link>
               </div>
             </div>
           </div>

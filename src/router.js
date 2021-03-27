@@ -42,12 +42,11 @@ const routes = [
         }
     },
     {
-        path: "/game/settings/:type",
+        path: "/game/settings",
         name: "gameSettings",
         components: {
             header: AppHeader,
             default: GameSettings,
-            footer: AppFooter
         }
     },
     {
