@@ -1,7 +1,6 @@
 export const checkGameSettingsToStartGame = (gameConfig) => {
     let {username, levelId, languageId, multiplayer} = gameConfig;
     if (multiplayer) {
-
     } else {
         if (username && levelId && languageId) {
             return true;
@@ -11,3 +10,6 @@ export const checkGameSettingsToStartGame = (gameConfig) => {
         }
     }
 }
+export const getLastCharOfString = (string) => {
+    return string.substr(-1).toUpperCase();
+};

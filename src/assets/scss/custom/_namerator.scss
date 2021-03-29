@@ -7,3 +7,9 @@ main .vh100{
 .wd-100p {
   width: 100%;
 }
+.center-items{
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
