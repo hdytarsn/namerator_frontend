@@ -1,3 +1,5 @@
+import * as constants from "constants";
+
 const webpack = require('webpack');
 
 module.exports = {
@@ -17,6 +19,6 @@ module.exports = {
   },
   css: {
     // Enable CSS source maps.
-    sourceMap: process.env.NODE_ENV !== 'production'
+    sourceMap: constants.NODE_ENV !== 'production'
   }
 };

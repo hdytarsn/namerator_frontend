@@ -92,6 +92,7 @@
             <template>
               <div class="text-center text-muted mb-4">
                 <h3 class="font-weight-bold">Oda</h3>
+                <button @click="createRoom">room</button>
               </div>
 
             </template>
@@ -145,6 +146,9 @@ export default {
         this.$store.commit('setGameSettingsData', this.gameSettings);
         this.$router.push({ name: 'playGame' })
       }
+    },
+    createRoom(){
+
     }
   }, mounted() {
     //set default gameConfig

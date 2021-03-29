@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
 
 import { register } from 'register-service-worker'
+import {constants} from "./store/constants";
 
-if (process.env.NODE_ENV === 'production') {
-  register(`${process.env.BASE_URL}service-worker.js`, {
+if (constants.NODE_ENV === 'production') {
+  register(`${constants.BASE_URL}service-worker.js`, {
     ready () {
       console.log(
         'App is being served from cache by a service worker.\n' +

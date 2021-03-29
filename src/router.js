@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import {constants} from "./store/constants";
 import AppHeader from "./layout/AppHeader";
 import AppFooter from "./layout/AppFooter";
 import Home from "./views/game/Home.vue";
@@ -93,7 +94,7 @@ const routes = [
 ];
 const router = new Router({
     mode: 'history',
-    base: process.env.BASE_URL,
+    base: constants.BASE_URL,
     routes
 })
 router.beforeEach((to, from, next) => {

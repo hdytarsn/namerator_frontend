@@ -1,12 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios'
-import {constants} from './constants'
-
+import {login, register} from '../requests/requests'
 Vue.use(Vuex);
-axios.defaults.baseURL = constants.API_BASE_URL;
-
-
 export const store = new Vuex.Store({
     state: {
         user: null,
@@ -34,7 +30,7 @@ export const store = new Vuex.Store({
             state.game.speech.currentState = speechData.currentState;
         },
         setGameSettingsData(state, gameSettingsData) {
-            state.game.settings=gameSettingsData;
+            state.game.settings = gameSettingsData;
         },
         clearUserData() {
             localStorage.removeItem('user')
@@ -42,18 +38,14 @@ export const store = new Vuex.Store({
         }
     }, actions: {
         login({commit}, credentials) {
-            return axios
-                .post('/login', credentials)
-                .then(({data}) => {
-                    commit('setUserData', data)
-                })
+            return login(credentials).then(data => {
+                commit('setUserData', data);
+            })
         },
         register({commit}, credentials) {
-            return axios
-                .post('/register', credentials)
-                .then(({data}) => {
-                    commit('setUserData', data)
-                })
+            return register(credentials).then(data => {
+                commit('setUserData', data);
+            })
         },
         logout({commit}) {
             commit('clearUserData')
