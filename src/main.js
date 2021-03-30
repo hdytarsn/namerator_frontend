@@ -5,9 +5,24 @@ import Argon from "./plugins/argon-kit";
 import './registerServiceWorker'
 import { store } from './store/store'
 import axios from "axios";
+import {constants} from './store/constants';
+import Echo from 'laravel-echo';
 
+window.Pusher = require('pusher-js');
+window.echo = new Echo({
+    broadcaster: 'pusher',
+    key: constants.PUSHER_APP_KEY,
+    cluster: constants.PUSHER_CLUSTER,
+    forceTLS: true,
+    wsHost: 'http://namerator.test/api',
+    authHost: "http://namerator.test/api",
+    authEndpoint:'http://namerator.test/api/broadcasting/auth',
+    transports: ['websocket', 'polling', 'flashsocket'] // Fix CORS error!
+
+});
 Vue.config.productionTip = false;
 Vue.use(Argon);
+
 new Vue({
   store,
   router,

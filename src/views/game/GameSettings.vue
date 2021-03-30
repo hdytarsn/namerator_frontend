@@ -89,20 +89,37 @@
                 body-classes="px-lg-5 py-lg-5"
                 class="border-0">
 
-            <template>
+            <div v-if="isLogged">
               <div class="text-center text-muted mb-4">
-                <h3 class="font-weight-bold">Oda</h3>
-                <button @click="createRoom">room</button>
-              </div>
+                <h5 class="font-weight-bold mt-2">Arkadaşlarınla oynayabileceğin bir link edinmek için hemen bir oda
+                  kur!</h5>
 
-            </template>
+                <span v-if="gameSettings.gameRoom.status!==0" class="badge"
+                      :class="gameSettings.gameRoom.status===1 ?'badge-primary':'badge-success'">{{
+                    gameSettings.gameRoom.status === 1 ? 'Odanız hazırlanıyor, lütfen bekleyiniz' : 'Odanız hazır, iyi eğlenceler!'
+                  }}</span>
+                <br>
+
+                <button v-if="gameSettings.gameRoom.status===0" @click="createRoom"
+                        class="btn btn-primary btn-lg px-5 mt-3">Oda Kur
+                </button>
+
+                <button v-if="gameSettings.gameRoom.status===2" @click="goToGame"
+                        class="btn btn-success btn-lg px-5 mt-3">Odaya Gir
+                </button>
+              </div>
+            </div>
+            <div class="text-center" v-else>
+              <span class="alert alert-danger font-weight-bold">Çok oyunculu oyun kurmak için öncelikle üye girişi yapmalısınız!</span>
+            </div>
+
           </card>
         </div>
         <div class="col-lg-12">
-          <base-button class="wd-100p mt-3"
-                       @click="startGame"
+          <base-button v-if="!gameSettings.multiplayer" class="wd-100p mt-3"
+                       @click="goToGame"
                        type="primary"
-                       >
+          >
             Oyunu Başlat
           </base-button>
         </div>
@@ -115,18 +132,25 @@ import BaseInput from "../../components/BaseInput";
 import BaseDropdown from "../../components/BaseDropdown";
 import {gameConfig} from "../../store/gameConfig"
 import {checkGameSettingsToStartGame} from "../../helpers/helpers"
-import {store} from "../../store/store";
+import {createRoomWithGameSettings} from "../../requests/requests"
+import {mapGetters} from "vuex";
 
 export default {
   data() {
     return {
+
       gameLevels: gameConfig.LEVELS,
       speechLanguages: gameConfig.SPEECH_LANGUAGES,
       gameSettings: {
         username: "",
         levelId: "",
         languageId: "",
-        multiplayer: false
+        multiplayer: false,
+        gameRoom: {
+          status: 0, //1>hazırlanıyor(http request, 2>hazır)
+          id: null,
+          slug: null
+        }
       }
     };
   },
@@ -141,20 +165,32 @@ export default {
     setGameLanguage(speechLanguage) {
       this.gameSettings.languageId = speechLanguage.id;
     },
-    startGame() {
+    goToGame() {
       if (checkGameSettingsToStartGame(this.gameSettings)) {
         this.$store.commit('setGameSettingsData', this.gameSettings);
-        this.$router.push({ name: 'playGame' })
+        this.gameSettings.multiplayer ?
+            this.$router.push({name: 'gameRoom',params: { slug: this.gameSettings.gameRoom.slug }})
+            : this.$router.push({name: 'playGame'});
       }
     },
-    createRoom(){
-
+    createRoom() {
+      this.gameSettings.gameRoom.status=1;
+      createRoomWithGameSettings(this.gameSettings).then(data => {
+        this.gameSettings.gameRoom.id = data.id;
+        this.gameSettings.gameRoom.slug = data.slug;
+        this.gameSettings.gameRoom.status=2;
+      })
     }
   }, mounted() {
     //set default gameConfig
     this.gameSettings.levelId = gameConfig.LEVELS[0].id;
     this.gameSettings.languageId = gameConfig.SPEECH_LANGUAGES[0].id;
-  }
+  },
+  computed: {
+    ...mapGetters([
+      'isLogged'
+    ])
+  },
 };
 </script>
 <style scoped>

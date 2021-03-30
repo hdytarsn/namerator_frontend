@@ -7,12 +7,18 @@ export const store = new Vuex.Store({
     state: {
         user: null,
         game: {
-            isGameStarted: false,
             settings: {
                 username: null,
                 levelId: null,
                 languageId: null,
                 multiplayer: null,
+                isGameStarted: false,
+                gameRoom:{
+                    status:0,
+                    id:null,
+                    slug:null,
+                    created_by:null
+                }
             },
             speech: {
                 diagnosis: null,
@@ -52,6 +58,8 @@ export const store = new Vuex.Store({
         }
     },
     getters: {
-        isLogged: state => !!state.user
+        isLogged: state => !!state.user,
+        userToken: state => state.user.token,
+        currentUser: state => state.user.user
     }
 })

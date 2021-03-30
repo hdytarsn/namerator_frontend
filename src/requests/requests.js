@@ -17,3 +17,20 @@ export const register = (credentials) => {
             return data;
         })
 }
+
+export const createRoomWithGameSettings = (gameSettings) => {
+    return axios
+        .post('/room/create',{gameSettings:JSON.stringify(gameSettings)})
+        .then(({data}) => {
+            console.log(data)
+            return data;
+        })
+}
+
+export const getRoomConfig = (slug) => {
+    return axios
+        .get(`/room/config/${slug}`)
+        .then(({data}) => {
+            return data;
+        })
+}

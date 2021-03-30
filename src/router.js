@@ -7,6 +7,7 @@ import Home from "./views/game/Home.vue";
 import HowToPlay from "./views/information/HowToPlay.vue";
 import GameRules from "./views/information/GameRules.vue";
 import GameSettings from "./views/game/GameSettings";
+import GameRoom from "./views/game/GameRoom";
 import PlayGame from "./views/game/PlayGame";
 import Login from "./views/user/Login.vue";
 import Register from "./views/user/Register.vue";
@@ -48,6 +49,14 @@ const routes = [
         components: {
             header: AppHeader,
             default: GameSettings,
+        }
+    },
+    {
+        path: "/game/room/:slug",
+        name: "gameRoom",
+        components: {
+            header: AppHeader,
+            default: GameRoom,
         }
     },
     {
@@ -94,7 +103,7 @@ const routes = [
 ];
 const router = new Router({
     mode: 'history',
-    base: constants.BASE_URL,
+    base: '/',
     routes
 })
 router.beforeEach((to, from, next) => {
@@ -105,6 +114,7 @@ router.beforeEach((to, from, next) => {
     }
     next()
 });
+
 export default router;
 
 
