@@ -7,7 +7,8 @@ import { store } from './store/store'
 import axios from "axios";
 import {constants} from './store/constants';
 import Echo from 'laravel-echo';
-
+axios.defaults.baseURL = constants.API_BASE_URL;
+window.axios = require('axios').default;
 window.Pusher = require('pusher-js');
 window.echo = new Echo({
     broadcaster: 'pusher',
@@ -32,7 +33,7 @@ new Vue({
       const userData = JSON.parse(userInfo)
       this.$store.commit('setUserData', userData)
     }
-    axios.interceptors.response.use(
+    window.axios.interceptors.response.use(
         response => response,
         error => {
           if (error.response.status === 401) {

@@ -7,8 +7,9 @@ import Home from "./views/game/Home.vue";
 import HowToPlay from "./views/information/HowToPlay.vue";
 import GameRules from "./views/information/GameRules.vue";
 import GameSettings from "./views/game/GameSettings";
-import GameRoom from "./views/game/GameRoom";
-import PlayGame from "./views/game/PlayGame";
+import GameRoom from "./views/game/_GameRoom";
+import GameRoot from "./views/game/GameRoot";
+import PlayGame from "./views/game/_PlayGame";
 import Login from "./views/user/Login.vue";
 import Register from "./views/user/Register.vue";
 import Profile from "./views/user/Profile.vue";
@@ -52,6 +53,17 @@ const routes = [
         }
     },
     {
+        path: "/game/play/multiplayer/:room",
+        name: "playMultiplayer",
+        components: {
+            header: AppHeader,
+            default: GameRoot,
+        },
+        meta: {
+            auth: true
+        },
+    },
+    {
         path: "/game/room/:slug",
         name: "gameRoom",
         components: {
@@ -60,7 +72,7 @@ const routes = [
         }
     },
     {
-        path: "/game/play",
+        path: "/game/play/single-player",
         name: "playGame",
         components: {
             header: AppHeader,

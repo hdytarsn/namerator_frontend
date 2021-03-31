@@ -169,7 +169,7 @@ export default {
       if (checkGameSettingsToStartGame(this.gameSettings)) {
         this.$store.commit('setGameSettingsData', this.gameSettings);
         this.gameSettings.multiplayer ?
-            this.$router.push({name: 'gameRoom',params: { slug: this.gameSettings.gameRoom.slug }})
+            this.$router.push({name: 'playMultiplayer',params: { room: this.gameSettings.gameRoom.slug }})
             : this.$router.push({name: 'playGame'});
       }
     },

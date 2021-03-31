@@ -1,17 +1,14 @@
-import axios from 'axios'
 import {constants} from '../store/constants'
 
-axios.defaults.baseURL = constants.API_BASE_URL;
-
 export const login = (credentials) => {
-    return axios
+    return window.axios
         .post('/login', credentials)
         .then(({data}) => {
             return data;
         })
 }
 export const register = (credentials) => {
-    return axios
+    return window.axios
         .post('/register', credentials)
         .then(({data}) => {
             return data;
@@ -19,7 +16,7 @@ export const register = (credentials) => {
 }
 
 export const createRoomWithGameSettings = (gameSettings) => {
-    return axios
+    return window.axios
         .post('/room/create',{gameSettings:JSON.stringify(gameSettings)})
         .then(({data}) => {
             console.log(data)
@@ -28,8 +25,16 @@ export const createRoomWithGameSettings = (gameSettings) => {
 }
 
 export const getRoomConfig = (slug) => {
-    return axios
+    return window.axios
         .get(`/room/config/${slug}`)
+        .then(({data}) => {
+            return data;
+        })
+}
+
+export const startGame = (slug) => {
+    return window.axios
+        .post('/game/start',{'slug':slug})
         .then(({data}) => {
             return data;
         })
