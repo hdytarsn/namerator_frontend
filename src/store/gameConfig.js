@@ -25,14 +25,32 @@ export const gameConfig = Object.freeze({
         {
             id: 1,
             name: "Türkçe",
-            slug: "tr",
+            short: "tr",
             img: "https://demos.creative-tim.com/argon-design-system/assets/img/icons/flags/TR.png"
         },
         {
             id: 2,
             name: "İngilizce",
-            slug: "en",
+            short: "en",
             img: "https://demos.creative-tim.com/argon-design-system/assets/img/icons/flags/US.png"
+        },
+    ],
+    GAME_DURATIONS_BY_LEVEL: [
+        {
+            levelId: 1,
+            duration: 12,
+        },
+        {
+            levelId: 2,
+            duration: 10,
+        },
+        {
+            levelId: 3,
+            duration: 8,
+        },
+        {
+            levelId: 4,
+            duration: 6,
         },
     ]
 });

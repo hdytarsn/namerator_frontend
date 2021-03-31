@@ -14,9 +14,9 @@
               <div class="col-md-6 border-right">
                 <count-down
                   v-show="isMyTurn()"
-                  :paused="isGamePaused"
+                  :paused="gameRoom.isGamePaused"
                   label="Saniye"
-                  :initial-value="gameSettings.gameDuration"
+                  :initial-value="gameDuration"
                   :size="150"
                   @finish="timeIsUp"
                   @update="countDownUpdated"
@@ -106,12 +106,12 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="user in users" :key="user.id" class="">
+                  <tr v-for="user in gameUsers" :key="user.id" class="">
                     <td>
                       <count-down
                         v-show="activePlayer.id === user.id"
                         :ref="'countDown' + user.id"
-                        :initial-value="gameSettings.gameDuration"
+                        :initial-value="gameDuration"
                         :size="40"
                         :stroke-width="2"
                         :padding="0"
@@ -152,7 +152,9 @@
                 </thead>
                 <tbody>
                   <tr v-for="action in gameSettings.GameActions" class="">
-                    <td>{{ getUserById(action.action_result.user_id).name }}</td>
+                    <td>
+                      {{ getUserById(action.action_result.user_id).name }}
+                    </td>
                     <td>{{ action.action_result.point }}</td>
                     <td>{{ action.action_result.status }}</td>
                   </tr>
@@ -169,48 +171,79 @@
 import BaseInput from "../../components/BaseInput";
 import CountDown from "../../components/CountDown";
 import recognition from "../../logic/recognition";
-import { getLastCharOfString } from "../../helpers/helpers";
+import {
+  getLastCharOfString,
+  getLangById,
+  getGameDurationByLevelId,
+} from "../../helpers/helpers";
 import { gameAction } from "../../requests/requests";
 import { mapGetters } from "vuex";
 
-
 export default {
+  components: {
+    BaseInput,
+    CountDown,
+  },
   props: {
-    users: Array,
     currentUser: Object,
     roomSlug: String,
-    gameAction:Object
+    gameAction: Object,
   },
   data() {
     return {
       isGamePaused: false,
       gameSettings: {
         round: 1,
-        gameDuration: 10,
+        
         currentWord: "",
         activePlayerIndex: 0,
-        GameActions:[]
+        GameActions: [],
       },
     };
   },
+  computed: {
+    lastChar: function () {
+      return getLastCharOfString(
+        this.gameSettings.currentWord ? this.gameSettings.currentWord : ""
+      );
+    },
+    gameDuration: () => {
+      return getGameDurationByLevelId(this.gameSettings.levelId);
+    },
+
+    ...mapGetters([
+      "gameSettings",
+      "gameRoom",
+      "gameUsers",
+      "speechState",
+      "speechDiagnosis",
+      "activeGamePlayer",
+      "authUser",
+      "getUserById",
+      "increaseActivePlayerIndex",
+      "resetPlayerIndex",
+      "isPauseGame",
+    ]),
+  },
   methods: {
     listen() {
-      let diagnosis = new recognition({ lang: "tr" });
+      let diagnosis = new recognition({
+        lang: getLangById(this.gameSettings.languageId).short,
+      });
       diagnosis.startListen();
     },
     isMyTurn() {
-      return this.activePlayer.id === this.currentUser.id ? true : false;
+      return this.activeGamePlayer[user].id === this.authUser.id ? true : false;
     },
-    getUserById(id){
-      let index = this.users
-          .map(function (user) {
-            return user.id;
-          })
-          .indexOf(id);
-        return this.users[index];
+    setActivePlayer() {
+      if (this.gameUsers[activeGamePlayer[index] + 1]) {
+        this.$store.commit("increaseActivePlayerIndex");
+      } else {
+        this.$store.commit("resetPlayerIndex");
+      }
     },
+
     timeIsUp() {
-      console.log(this.getUserById(1));
       if (this.isMyTurn()) {
         gameAction(
           this.roomSlug,
@@ -218,14 +251,12 @@ export default {
           this.gameSettings.currentWord
         ).then((data) => {});
       }
-      
-      if (this.users[this.gameSettings.activePlayerIndex + 1]) {
-        this.gameSettings.activePlayerIndex++;
-      } else {
-        this.gameSettings.activePlayerIndex = 0;
-      }
-this.isGamePaused=true;
-      this.$refs[`countDown`].updateTime(this.gameSettings.gameDuration);
+      this.setActivePlayer();
+
+      this.$store.commit("isPauseGame", true);
+
+      this.isGamePaused = true;
+      this.$refs[`countDown`].updateTime(gameDuration);
     },
     countDownUpdated(status) {
       this.$refs[`countDown${this.activePlayer.id}`][0].updateManuel(
@@ -235,68 +266,22 @@ this.isGamePaused=true;
   },
   created() {
     this.isMyTurn() ? this.listen() : "";
-      ("");
   },
-  computed: {
-    activePlayer() {
-      return this.users[this.gameSettings.activePlayerIndex];
-    },
-    lastChar() {
-      return getLastCharOfString(this.gameSettings.currentWord?this.gameSettings.currentWord:"");
-    },
-     
-    ...mapGetters(["speechState","speechDiagnosis"]),
-  
-  },
+
   watch: {
-    activePlayer() {
+    activeGamePlayer() {
       this.isMyTurn() ? this.listen() : "";
-      ("");
     },
-    gameAction(){
-      this.isGamePaused=false;
-      if(this.gameAction.action_result.point===30){
-          this.gameSettings.currentWord=this.gameAction.action_result.name
-      }else{
-          this.gameAction.action_result.name=this.gameSettings.currentWord
-      };
-      
-      this.gameSettings.GameActions.push(this.gameAction)
-    }
-  },
-  
-  mounted() {},
-  components: {
-    BaseInput,
-    CountDown,
+    gameAction() {
+      this.isGamePaused = false;
+      if (this.gameAction.action_result.point === 30) {
+        this.gameSettings.currentWord = this.gameAction.action_result.name;
+      } else {
+        this.gameAction.action_result.name = this.gameSettings.currentWord;
+      }
+
+      this.gameSettings.GameActions.push(this.gameAction);
+    },
   },
 };
 </script>
-<style scoped>
-.currentWord {
-  text-align: center;
-}
-
-.currentWord > span {
-  font-size: 6rem;
-  font-weight: 900;
-}
-
-tbody > tr > td:first-child {
-  text-align: center;
-}
-
-.disabledSpeech {
-  filter: grayscale(100%);
-}
-
-.diagnosis > p {
-  padding: 3px 10px;
-  border-radius: 5px;
-  margin-top: 10px;
-  font-size: 30px;
-  line-height: normal;
-  font-weight: 700;
-  background: #a3fca0;
-}
-</style>

@@ -23,3 +23,30 @@ margin-top: -25px;
  border-radius: 10px;
  font-weight: 900;
 }
+
+.currentWord {
+  text-align: center;
+}
+
+.currentWord > span {
+  font-size: 6rem;
+  font-weight: 900;
+}
+
+tbody > tr > td:first-child {
+  text-align: center;
+}
+
+.disabledSpeech {
+  filter: grayscale(100%);
+}
+
+.diagnosis > p {
+  padding: 3px 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-size: 30px;
+  line-height: normal;
+  font-weight: 700;
+  background: #a3fca0;
+}

@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import { login, register, getRoomConfig } from "../requests/requests";
+import { login, register, getRoomConfig,startGame } from "../requests/requests";
 Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
@@ -24,11 +24,12 @@ export const store = new Vuex.Store({
       },
       active: {
         users: [],
-        activePlayer: null,
+        activePlayerIndex: 0,
         activeNameEntry: "",
         gameActions: [],
       },
       speech: {
+        lastActiveName: "",
         diagnosis: "",
         currentState: "",
       },
@@ -96,6 +97,12 @@ export const store = new Vuex.Store({
     setGameActioData(state, gameAction) {
       state.game.active.actions.push(gameAction);
     },
+    increaseActivePlayerIndex(state) {
+      state.game.active.activePlayerIndex++;
+    },
+    resetPlayerIndex(state) {
+      state.game.active.activePlayerIndex = 0;
+    },
   },
   actions: {
     //auth actions
@@ -113,7 +120,13 @@ export const store = new Vuex.Store({
       commit("clearUserData");
     },
     //game actions
-    geyRoomConfigByRoomSlug({ commit }, roomSlug) {
+
+    startTheGameForEveryOne({ commit }, roomSlug) {
+        return startGame(roomSlug).then((data) => {
+          commit("isStartGame", true);
+        });
+      },
+    getRoomConfigByRoomSlug({ commit }, roomSlug) {
       return getRoomConfig(roomSlug).then((data) => {
         commit("setGameRoomConfigIfKeyExist", data.config);
         commit("setGameSettingsIfKeyExist", data.config);
@@ -137,9 +150,19 @@ export const store = new Vuex.Store({
     speechDiagnosis: (state) => state.game.speech.diagnosis,
 
     gameSettings: (state) => state.game.settings,
-    gameUsers: (state) => state.game.active.users,
     gameRoom: (state) => state.game.room,
     gameRoomHosterId: (state) => state.game.room.created_by,
     activeGame: (state) => state.game.active,
+
+    gameUsers: (state) => state.game.active.users,
+    activeGamePlayer: (state) => [
+      (user) =>
+        state.game.active.users[
+          (state.game.active.activePlayerIndex,
+          (index) => state.game.activePlayerIndex)
+        ],
+    ],
+    getUserById: (state, id) =>
+      state.game.active.users.filter((user) => user.id == id)[0],
   },
 });

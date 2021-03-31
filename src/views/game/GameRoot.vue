@@ -2,13 +2,11 @@
   <div>
     <GameRoomScreen
       v-if="!showGameScreen"
-      :users="gameUsers"
       :roomConfig="gameRoom"
       :currentUser="authUser"
       :roomSlug="roomSlug"
     ></GameRoomScreen>
     <GamePlayScreen
-      :users="gameUsers"
       :currentUser="authUser"
       :roomSlug="roomSlug"
       :gameAction="gameAction"
@@ -37,7 +35,7 @@ export default {
   },
   created() {
     this.$store
-      .dispatch("geyRoomConfigByRoomSlug", this.roomSlug)
+      .dispatch("getRoomConfigByRoomSlug", this.roomSlug)
       .catch((err) => {
         console.log(err);
       });

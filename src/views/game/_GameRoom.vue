@@ -20,16 +20,16 @@
               </span>
               <div class="mt-4" v-if="gameSettings">
                 <p class="badge badge-info">
-                  Oyun Dili: {{ gameSettings.languageId }}
+                  Oyun Dili: <b>{{ gameLang }}</b>
                 </p>
                 <p class="badge badge-info">
-                  Zorluk Seviyesi: {{ gameSettings.levelId }}
+                  Zorluk Seviyesi: <b>{{ gameLevel }}</b>
                 </p>
               </div>
             </div>
             <div class="row text-center mt-5">
               <div
-                v-for="user in users"
+                v-for="user in gameUsers"
                 :key="user.id"
                 class="col-md-4 room-user"
               >
@@ -65,15 +65,15 @@
 </template>
 <script>
 import BaseInput from "../../components/BaseInput";
-import { startGame } from "../../requests/requests";
 import { mapGetters } from "vuex";
+import { getLevelById, getLangById } from "../../helpers/helpers";
 
 export default {
+  components: {
+    BaseInput,
+  },
   props: {
-    users: Array,
     roomConfig: Object,
-    currentUser: Object,
-  
     roomSlug: String,
   },
   data() {
@@ -81,28 +81,32 @@ export default {
       invitationLink: window.location.href,
     };
   },
-  components: {
-    BaseInput,
-  },
-  created() {
-    console.log("this.roomConfig");
-    console.log(this.roomConfig);
+  computed: {
+    ...mapGetters([
+      "authUser",
+      "gameUsers",
+      "gameSettings",
+      "gameRoomHosterId",
+    ]),
+    isHost() {
+      return this.authUser.id == this.gameRoomHosterId ? true : false;
+    },
+    gameLang(){
+      return getLangById(this.gameSettings.languageId).name;
+    },
+    gameLevel(){
+      return getLevelById(this.gameSettings.levelId).name;
+    }
   },
 
   methods: {
     startGame() {
-      startGame(this.roomSlug).then((data) => {
-        console.log(data);
-      });
+      this.$store
+        .dispatch("startTheGameForEveryOne", this.roomSlug)
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
-  computed: {
-    isHost() {
-      return this.currentUser.id == this.gameRoomHosterId ? true : false;
-    },
-    ...mapGetters(["gameSettings","gameRoomHosterId"]),
-
-  },
-   
 };
 </script>
