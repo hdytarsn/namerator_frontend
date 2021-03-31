@@ -39,3 +39,11 @@ export const startGame = (slug) => {
             return data;
         })
 }
+
+export const gameAction = (slug,entryName,pastName) => {
+    return window.axios
+        .post('/game/action/create',{'slug':slug,'entryName':entryName,'pastName':pastName})
+        .then(({data}) => {
+            return data;
+        })
+}

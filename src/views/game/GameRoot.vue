@@ -3,6 +3,8 @@
     <GamePlayScreen
       :users="users"
       :currentUser="currentUser"
+      :roomSlug="roomSlug"
+      :gameAction="gameAction"
       v-if="val"
     ></GamePlayScreen>
 
@@ -31,6 +33,7 @@ export default {
       roomSlug: this.$route.params.room,
       roomConfig: null,
       roomHostUserId: null,
+      gameAction:[]
     };
   },
   components: {
@@ -40,6 +43,11 @@ export default {
   methods: {
     set() {
       this.val = !this.val;
+    },
+    sortUsers() {
+      this.users.sort(function (a, b) {
+        return a.id - b.id || a.name.localeCompare(b.name);
+      });
     },
   },
   mounted() {},
@@ -59,7 +67,6 @@ export default {
         users.forEach((user) => {
           user.point = 0;
           this.users.push(user);
-          console.log("11");
         });
         console.log(this.users);
       })
@@ -77,10 +84,15 @@ export default {
       })
       .listen("StartGame", (gameStatus) => {
         if (gameStatus.IsGameStarted) {
+          this.sortUsers();
           this.val = true;
         }
-      });
+      }).listen("GameActionBroadcast",(gameAction)=>{
+          console.log(gameAction);
+          this.gameAction=gameAction;
+      })
   },
+
   beforeRouteLeave(to, from, next) {
     window.echo.leave(`game.room.${this.roomSlug}`);
     next();

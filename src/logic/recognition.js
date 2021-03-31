@@ -27,19 +27,19 @@ class recognition {
             console.log("Speech not recognized");
         };
         speechElement.onaudiostart = () => {
-            this.changeSpeechState("Waiting Your Voice");
+            this.changeSpeechState("Konuşmanız Bekleniyor");
         };
         speechElement.onsoundstart = () => {
-            this.changeSpeechState("Now Listening");
+            this.changeSpeechState("Dinleniyor");
         };
         speechElement.onsoundend = () => {
-            this.changeSpeechState("Now You Kept Quiet");
+            this.changeSpeechState("Sessiz Kaldınız");
         };
         speechElement.onend = () => {
             this.diagnosis
-                ? this.changeSpeechState("Complated")
+                ? this.changeSpeechState("Tamamlandı")
                 : this.changeSpeechState(
-                "Can't Understand Your Voice, Try Again!"
+                "Anlaşılmadı!"
                 );
         };
     }

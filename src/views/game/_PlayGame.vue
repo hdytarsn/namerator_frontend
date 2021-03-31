@@ -13,8 +13,8 @@
             <div class="row">
               <div class="col-md-6 border-right">
                 <count-down
-                  v-show="isMyTurn"
-                  :paused="false"
+                  v-show="isMyTurn()"
+                  :paused="isGamePaused"
                   label="Saniye"
                   :initial-value="gameSettings.gameDuration"
                   :size="150"
@@ -23,7 +23,7 @@
                   ref="countDown"
                 ></count-down>
                 <div class="text-center">
-                  <div v-show="!isMyTurn">
+                  <div v-show="!isMyTurn()">
                     <img
                       v-lazy="activePlayer.img"
                       alt="Circle image"
@@ -62,7 +62,7 @@
                     src="/img/icons/mic.png"
                     alt="Circle image"
                     class="img-fluid rounded-circle shadow"
-                    :class="!isMyTurn ? 'disabledSpeech' : ''"
+                    :class="!isMyTurn() ? 'disabledSpeech' : ''"
                     style="width: 80px"
                   />
                   <p class="mt-2 font-weight-700">
@@ -75,13 +75,11 @@
                 <div class="diagnosis">
                   <p>{{ this.$store.state.game.speech.diagnosis }}</p>
                 </div>
-                <div class="row" v-if="isMyTurn">
+                <div class="row" v-if="isMyTurn()">
                   <button
                     @click="listen"
                     class="btn btn-danger"
-                    v-if="
-                      this.$store.state.game.speech.currentState === 'Complated'
-                    "
+                    v-if="this.$store.state.game.speech.currentState !== ''"
                   >
                     Tekrar Dinle
                   </button>
@@ -119,7 +117,7 @@
                         :padding="0"
                         :run-count-down="false"
                       ></count-down>
-                      <div v-show="!isMyTurn">
+                      <div v-show="activePlayer.id !== user.id">
                         <img
                           v-lazy="user.img"
                           alt="Circle image"
@@ -135,6 +133,33 @@
               </table>
             </template>
           </card>
+
+          <card
+            type="secondary"
+            shadow
+            header-classes="bg-white pb-5"
+            body-classes="px-lg-5 py-lg-5"
+            class="border-0 mt-5"
+          >
+            <template>
+              <table class="table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <td>Oyuncu</td>
+                    <td>Puan</td>
+                    <td>Durum</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="action in gameSettings.GameActions" class="">
+                    <td>{{ getUserById(action.action_result.user_id).name }}</td>
+                    <td>{{ action.action_result.point }}</td>
+                    <td>{{ action.action_result.status }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </template>
+          </card>
         </div>
       </div>
     </div>
@@ -145,70 +170,94 @@ import BaseInput from "../../components/BaseInput";
 import CountDown from "../../components/CountDown";
 import recognition from "../../logic/recognition";
 import { getLastCharOfString } from "../../helpers/helpers";
-
+import { gameAction } from "../../requests/requests";
 
 export default {
   props: {
     users: Array,
     currentUser: Object,
+    roomSlug: String,
+    gameAction:Object
   },
   data() {
     return {
+      isGamePaused: false,
       gameSettings: {
         round: 1,
         gameDuration: 10,
-        isPaused: false,
         currentWord: "",
-        activePlayerIndex: 0
+        activePlayerIndex: 0,
+        GameActions:[]
       },
-    }
+    };
   },
   methods: {
     listen() {
       let diagnosis = new recognition({ lang: "tr" });
       diagnosis.startListen();
     },
-    isMyTurn(){
-      return this.activePlayer.id===this.currentUser.id?true:false;
+    isMyTurn() {
+      return this.activePlayer.id === this.currentUser.id ? true : false;
+    },
+    getUserById(id){
+      let index = this.users
+          .map(function (user) {
+            return user.id;
+          })
+          .indexOf(id);
+        return this.users[index];
     },
     timeIsUp() {
-      this.$store.state.game.speech.diagnosis
-        ? (this.gameSettings.currentWord = this.$store.state.game.speech.diagnosis)
-        : "";
-        console.log('index:'+this.gameSettings.activePlayerIndex)
-        
-
-      //kelimeyi dbye kaydet
-
-       if (this.users[this.gameSettings.activePlayerIndex + 1]) {
-        this.gameSettings.activePlayerIndex++;
-      }else{
-        this.gameSettings.activePlayerIndex =0
+      console.log(this.getUserById(1));
+      if (this.isMyTurn()) {
+        gameAction(
+          this.roomSlug,
+          this.$store.state.game.speech.diagnosis,
+          this.gameSettings.currentWord
+        ).then((data) => {});
       }
-     
+this.isGamePaused=true;
+      if (this.users[this.gameSettings.activePlayerIndex + 1]) {
+        this.gameSettings.activePlayerIndex++;
+      } else {
+        this.gameSettings.activePlayerIndex = 0;
+      }
+
       this.$refs[`countDown`].updateTime(this.gameSettings.gameDuration);
     },
     countDownUpdated(status) {
-      this.$refs[
-        `countDown${this.activePlayer.id}`
-      ][0].updateManuel(status.value);
+      this.$refs[`countDown${this.activePlayer.id}`][0].updateManuel(
+        status.value
+      );
     },
   },
   created() {
-    console.log(this.gameSettings);
+    this.isMyTurn() ? this.listen() : "";
+      ("");
   },
   computed: {
-    activePlayer(){
-return this.users[this.gameSettings.activePlayerIndex];
+    activePlayer() {
+      return this.users[this.gameSettings.activePlayerIndex];
     },
     lastChar() {
-      return getLastCharOfString(this.gameSettings.currentWord);
+      return getLastCharOfString(this.gameSettings.currentWord?this.gameSettings.currentWord:"");
     },
   },
   watch: {
     activePlayer() {
       this.isMyTurn() ? this.listen() : "";
+      ("");
     },
+    gameAction(){
+      this.isGamePaused=false;
+      if(this.gameAction.action_result.point===30){
+          this.gameSettings.currentWord=this.gameAction.action_result.name
+      }else{
+          this.gameAction.action_result.name=this.gameSettings.currentWord
+      };
+      
+      this.gameSettings.GameActions.push(this.gameAction)
+    }
   },
   mounted() {},
   components: {
