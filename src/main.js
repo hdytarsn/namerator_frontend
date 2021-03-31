@@ -18,8 +18,6 @@ window.echo = new Echo({
     wsHost: 'http://namerator.test/api',
     authHost: "http://namerator.test/api",
     authEndpoint:'http://namerator.test/api/broadcasting/auth',
-    transports: ['websocket', 'polling', 'flashsocket'] // Fix CORS error!
-
 });
 Vue.config.productionTip = false;
 Vue.use(Argon);

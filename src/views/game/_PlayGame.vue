@@ -66,20 +66,20 @@
                     style="width: 80px"
                   />
                   <p class="mt-2 font-weight-700">
-                    {{ this.$store.state.game.speech.currentState }}
+                    {{ speechState }}
                   </p>
                 </div>
               </div>
               <div class="col-md-8 center-items text-center">
                 <span class="badge badge-primary wd-100p">İsim Seçiminiz:</span>
                 <div class="diagnosis">
-                  <p>{{ this.$store.state.game.speech.diagnosis }}</p>
+                  <p>{{ speechDiagnosis }}</p>
                 </div>
                 <div class="row" v-if="isMyTurn()">
                   <button
                     @click="listen"
                     class="btn btn-danger"
-                    v-if="this.$store.state.game.speech.currentState !== ''"
+                    v-if="speechState !== ''"
                   >
                     Tekrar Dinle
                   </button>
@@ -171,6 +171,8 @@ import CountDown from "../../components/CountDown";
 import recognition from "../../logic/recognition";
 import { getLastCharOfString } from "../../helpers/helpers";
 import { gameAction } from "../../requests/requests";
+import { mapGetters } from "vuex";
+
 
 export default {
   props: {
@@ -212,17 +214,17 @@ export default {
       if (this.isMyTurn()) {
         gameAction(
           this.roomSlug,
-          this.$store.state.game.speech.diagnosis,
+          this.speechDiagnosis,
           this.gameSettings.currentWord
         ).then((data) => {});
       }
-this.isGamePaused=true;
+      
       if (this.users[this.gameSettings.activePlayerIndex + 1]) {
         this.gameSettings.activePlayerIndex++;
       } else {
         this.gameSettings.activePlayerIndex = 0;
       }
-
+this.isGamePaused=true;
       this.$refs[`countDown`].updateTime(this.gameSettings.gameDuration);
     },
     countDownUpdated(status) {
@@ -242,6 +244,9 @@ this.isGamePaused=true;
     lastChar() {
       return getLastCharOfString(this.gameSettings.currentWord?this.gameSettings.currentWord:"");
     },
+     
+    ...mapGetters(["speechState","speechDiagnosis"]),
+  
   },
   watch: {
     activePlayer() {
@@ -259,6 +264,7 @@ this.isGamePaused=true;
       this.gameSettings.GameActions.push(this.gameAction)
     }
   },
+  
   mounted() {},
   components: {
     BaseInput,

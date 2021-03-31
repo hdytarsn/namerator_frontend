@@ -18,12 +18,12 @@
               <span class="alert alert-success wd-100p"
                 >Odaya Davet Linki: <strong>{{ invitationLink }}</strong>
               </span>
-              <div class="mt-4" v-if="roomConfig">
+              <div class="mt-4" v-if="gameSettings">
                 <p class="badge badge-info">
-                  Oyun Dili: {{ roomConfig.languageId }}
+                  Oyun Dili: {{ gameSettings.languageId }}
                 </p>
                 <p class="badge badge-info">
-                  Zorluk Seviyesi: {{ roomConfig.levelId }}
+                  Zorluk Seviyesi: {{ gameSettings.levelId }}
                 </p>
               </div>
             </div>
@@ -42,7 +42,7 @@
                 <div>
                   <span class="pos-absolute">
                     {{ user.name }}
-                    <i v-if="user.id === roomHostUserId">(Kurucu)</i>
+                    <i v-if="user.id === gameRoomHosterId">(Kurucu)</i>
                   </span>
                 </div>
               </div>
@@ -66,13 +66,14 @@
 <script>
 import BaseInput from "../../components/BaseInput";
 import { startGame } from "../../requests/requests";
+import { mapGetters } from "vuex";
 
 export default {
   props: {
     users: Array,
     roomConfig: Object,
     currentUser: Object,
-    roomHostUserId: Number,
+  
     roomSlug: String,
   },
   data() {
@@ -82,6 +83,10 @@ export default {
   },
   components: {
     BaseInput,
+  },
+  created() {
+    console.log("this.roomConfig");
+    console.log(this.roomConfig);
   },
 
   methods: {
@@ -93,8 +98,11 @@ export default {
   },
   computed: {
     isHost() {
-      return this.currentUser.id == this.roomHostUserId ? true : false;
+      return this.currentUser.id == this.gameRoomHosterId ? true : false;
     },
+    ...mapGetters(["gameSettings","gameRoomHosterId"]),
+
   },
+   
 };
 </script>

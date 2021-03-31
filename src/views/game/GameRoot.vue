@@ -1,101 +1,77 @@
 <template>
   <div>
-    <GamePlayScreen
-      :users="users"
-      :currentUser="currentUser"
-      :roomSlug="roomSlug"
-      :gameAction="gameAction"
-      v-if="val"
-    ></GamePlayScreen>
-
     <GameRoomScreen
-      v-if="!val"
-      :users="users"
-      :roomConfig="roomConfig"
-      :currentUser="currentUser"
-      :roomHostUserId="roomHostUserId"
+      v-if="!showGameScreen"
+      :users="gameUsers"
+      :roomConfig="gameRoom"
+      :currentUser="authUser"
       :roomSlug="roomSlug"
     ></GameRoomScreen>
-    <button @click="set">SET</button>
+    <GamePlayScreen
+      :users="gameUsers"
+      :currentUser="authUser"
+      :roomSlug="roomSlug"
+      :gameAction="gameAction"
+      v-else
+    ></GamePlayScreen>
   </div>
 </template>
 <script>
 import GamePlayScreen from "./_PlayGame";
 import GameRoomScreen from "./_GameRoom";
-import { getRoomConfig } from "../../requests/requests";
 import { mapGetters } from "vuex";
 
 export default {
-  data() {
-    return {
-      users: [],
-      val: false,
-      roomSlug: this.$route.params.room,
-      roomConfig: null,
-      roomHostUserId: null,
-      gameAction:[]
-    };
-  },
   components: {
     GamePlayScreen,
     GameRoomScreen,
   },
-  methods: {
-    set() {
-      this.val = !this.val;
-    },
-    sortUsers() {
-      this.users.sort(function (a, b) {
-        return a.id - b.id || a.name.localeCompare(b.name);
-      });
-    },
+  data() {
+    return {
+      showGameScreen: false,
+      roomSlug: this.$route.params.room,
+    };
   },
-  mounted() {},
   computed: {
-    ...mapGetters(["userToken", "currentUser"]),
+    ...mapGetters(["userToken", "authUser", "gameUsers", "gameRoom"]),
   },
   created() {
-    getRoomConfig(this.roomSlug).then((data) => {
-      this.roomConfig = data.config;
-      this.roomHostUserId = data.room.created_by;
-    });
+    this.$store
+      .dispatch("geyRoomConfigByRoomSlug", this.roomSlug)
+      .catch((err) => {
+        console.log(err);
+      });
+
     window.echo.connector.pusher.config.auth.headers["Authorization"] =
       "Bearer " + this.userToken;
     window.echo
       .join(`game.room.${this.$route.params.room}`)
       .here((users) => {
         users.forEach((user) => {
-          user.point = 0;
-          this.users.push(user);
+          this.$store.dispatch('setGameUserWithSorting',user);
         });
-        console.log(this.users);
       })
       .joining((user) => {
-        this.users.push(user);
-        console.log("22");
+        this.$store.dispatch("setGameUserWithSorting", user);
       })
       .leaving((user) => {
-        let index = this.users
-          .map(function (user) {
-            return user.id;
-          })
-          .indexOf(user.id);
-        this.users.splice(index, 1);
+        this.$store.dispatch('removeGameUserWithSorting',user);
       })
       .listen("StartGame", (gameStatus) => {
         if (gameStatus.IsGameStarted) {
-          this.sortUsers();
-          this.val = true;
+          this.$store.commit("isStartGame", true);
+          this.showGameScreen = true;
         }
-      }).listen("GameActionBroadcast",(gameAction)=>{
-          console.log(gameAction);
-          this.gameAction=gameAction;
       })
+      .listen("GameActionBroadcast", (gameAction) => {
+        this.$store.commit("setGameActioData", gameAction);
+      });
   },
-
-  beforeRouteLeave(to, from, next) {
-    window.echo.leave(`game.room.${this.roomSlug}`);
-    next();
+ beforeRouteLeave(to, from, next) {
+    window.echo.leave(`game.room.${this.roomSlug}`); //wait until leave ws channel
+    setTimeout(() => {
+    next();  
+    }, 1000);
   },
 };
 </script>
