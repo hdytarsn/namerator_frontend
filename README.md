@@ -1,1 +1,5 @@
-<h1> Namerator Game</h1>
+<h1 align="center">Namerator Frontend</h1>
+
+<p align="center">
+<a href="https://github.com/hdytarsn/namerator_backend">Namerator Backend></a>
+    </p>
