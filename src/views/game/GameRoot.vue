@@ -2,15 +2,15 @@
   <div>
     <GameRoomScreen
       v-if="!showGameScreen"
-      :roomConfig="gameRoom"
-      :currentUser="authUser"
       :roomSlug="roomSlug"
+      :gameLang="gameLang"
+      :gameLevel="gameLevel"
     ></GameRoomScreen>
     <GamePlayScreen
-      :currentUser="authUser"
-      :roomSlug="roomSlug"
-      :gameAction="gameAction"
       v-else
+      :roomSlug="roomSlug"
+      :gameLang="gameLang"
+      :gameLevel="gameLevel"
     ></GamePlayScreen>
   </div>
 </template>
@@ -18,6 +18,7 @@
 import GamePlayScreen from "./_PlayGame";
 import GameRoomScreen from "./_GameRoom";
 import { mapGetters } from "vuex";
+import { getLevelById, getLangById } from "../../helpers/helpers";
 
 export default {
   components: {
@@ -31,7 +32,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userToken", "authUser", "gameUsers", "gameRoom"]),
+    ...mapGetters(["userToken", "authUser", "gameUsers", "gameRoom","gameSettings"]),
+    gameLang() {
+      return getLangById(this.gameSettings.languageId);
+    },
+    gameLevel() {
+      return getLevelById(this.gameSettings.levelId);
+    },
   },
   created() {
     this.$store
@@ -46,14 +53,14 @@ export default {
       .join(`game.room.${this.$route.params.room}`)
       .here((users) => {
         users.forEach((user) => {
-          this.$store.dispatch('setGameUserWithSorting',user);
+          this.$store.dispatch("setGameUserWithSorting", user);
         });
       })
       .joining((user) => {
         this.$store.dispatch("setGameUserWithSorting", user);
       })
       .leaving((user) => {
-        this.$store.dispatch('removeGameUserWithSorting',user);
+        this.$store.dispatch("removeGameUserWithSorting", user);
       })
       .listen("StartGame", (gameStatus) => {
         if (gameStatus.IsGameStarted) {
@@ -65,10 +72,10 @@ export default {
         this.$store.commit("setGameActioData", gameAction);
       });
   },
- beforeRouteLeave(to, from, next) {
+  beforeRouteLeave(to, from, next) {
     window.echo.leave(`game.room.${this.roomSlug}`); //wait until leave ws channel
     setTimeout(() => {
-    next();  
+      next();
     }, 1000);
   },
 };

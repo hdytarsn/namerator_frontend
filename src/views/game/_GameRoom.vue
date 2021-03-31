@@ -20,10 +20,10 @@
               </span>
               <div class="mt-4" v-if="gameSettings">
                 <p class="badge badge-info">
-                  Oyun Dili: <b>{{ gameLang }}</b>
+                  Oyun Dili: <b>{{ gameLang.name }}</b>
                 </p>
                 <p class="badge badge-info">
-                  Zorluk Seviyesi: <b>{{ gameLevel }}</b>
+                  Zorluk Seviyesi: <b>{{ gameLevel.name }}</b>
                 </p>
               </div>
             </div>
@@ -66,7 +66,6 @@
 <script>
 import BaseInput from "../../components/BaseInput";
 import { mapGetters } from "vuex";
-import { getLevelById, getLangById } from "../../helpers/helpers";
 
 export default {
   components: {
@@ -75,6 +74,8 @@ export default {
   props: {
     roomConfig: Object,
     roomSlug: String,
+    gameLang:Object,
+    gameLevel:Object
   },
   data() {
     return {
@@ -91,12 +92,6 @@ export default {
     isHost() {
       return this.authUser.id == this.gameRoomHosterId ? true : false;
     },
-    gameLang(){
-      return getLangById(this.gameSettings.languageId).name;
-    },
-    gameLevel(){
-      return getLevelById(this.gameSettings.levelId).name;
-    }
   },
 
   methods: {

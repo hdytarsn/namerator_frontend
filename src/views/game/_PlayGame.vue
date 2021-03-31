@@ -25,7 +25,7 @@
                 <div class="text-center">
                   <div v-show="!isMyTurn()">
                     <img
-                      v-lazy="activePlayer.img"
+                      v-lazy="activeGamePlayer.img"
                       alt="Circle image"
                       class="img-fluid rounded-circle shadow"
                       style="width: 150px"
@@ -34,16 +34,14 @@
                   <span class="badge badge-primary mt-3 d-block"
                     >Şu Anda Oynayan</span
                   >
-                  {{ activePlayer.name }}
+                  {{ activeGamePlayer.name }}
                 </div>
               </div>
               <div class="col-md-6 center-items">
                 <span class="badge badge-primary wd-100p">Şu Anki Harf</span>
                 <div class="currentWord">
                   <span>{{ lastChar }}</span>
-                  <br /><small>{{
-                    gameSettings.currentWord.toUpperCase()
-                  }}</small>
+                  <br /><small>{{ speech.lastActiveName.toUpperCase() }}</small>
                 </div>
               </div>
             </div>
@@ -66,20 +64,20 @@
                     style="width: 80px"
                   />
                   <p class="mt-2 font-weight-700">
-                    {{ speechState }}
+                    {{ speech.currentState }}
                   </p>
                 </div>
               </div>
               <div class="col-md-8 center-items text-center">
                 <span class="badge badge-primary wd-100p">İsim Seçiminiz:</span>
                 <div class="diagnosis">
-                  <p>{{ speechDiagnosis }}</p>
+                  <p>{{ speech.diagnosis }}</p>
                 </div>
                 <div class="row" v-if="isMyTurn()">
                   <button
                     @click="listen"
                     class="btn btn-danger"
-                    v-if="speechState !== ''"
+                    v-if="speech.currentState !== ''"
                   >
                     Tekrar Dinle
                   </button>
@@ -109,7 +107,7 @@
                   <tr v-for="user in gameUsers" :key="user.id" class="">
                     <td>
                       <count-down
-                        v-show="activePlayer.id === user.id"
+                        v-show="activeGamePlayer.id === user.id"
                         :ref="'countDown' + user.id"
                         :initial-value="gameDuration"
                         :size="40"
@@ -117,7 +115,7 @@
                         :padding="0"
                         :run-count-down="false"
                       ></count-down>
-                      <div v-show="activePlayer.id !== user.id">
+                      <div v-show="activeGamePlayer.id !== user.id">
                         <img
                           v-lazy="user.img"
                           alt="Circle image"
@@ -151,7 +149,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="action in gameSettings.GameActions" class="">
+                  <tr v-for="action in gameActions" class="">
                     <td>
                       {{ getUserById(action.action_result.user_id).name }}
                     </td>
@@ -173,10 +171,8 @@ import CountDown from "../../components/CountDown";
 import recognition from "../../logic/recognition";
 import {
   getLastCharOfString,
-  getLangById,
   getGameDurationByLevelId,
 } from "../../helpers/helpers";
-import { gameAction } from "../../requests/requests";
 import { mapGetters } from "vuex";
 
 export default {
@@ -185,58 +181,52 @@ export default {
     CountDown,
   },
   props: {
-    currentUser: Object,
     roomSlug: String,
-    gameAction: Object,
+    gameLang: Object,
+    gameLevel: Object,
   },
   data() {
-    return {
-      isGamePaused: false,
-      gameSettings: {
-        round: 1,
-        
-        currentWord: "",
-        activePlayerIndex: 0,
-        GameActions: [],
-      },
-    };
+    return {};
   },
   computed: {
-    lastChar: function () {
-      return getLastCharOfString(
-        this.gameSettings.currentWord ? this.gameSettings.currentWord : ""
-      );
-    },
-    gameDuration: () => {
-      return getGameDurationByLevelId(this.gameSettings.levelId);
-    },
-
     ...mapGetters([
+      "activeGame",
       "gameSettings",
       "gameRoom",
       "gameUsers",
-      "speechState",
-      "speechDiagnosis",
+      "speech",
       "activeGamePlayer",
+      "activeGamePlayerIndex",
       "authUser",
-      "getUserById",
       "increaseActivePlayerIndex",
       "resetPlayerIndex",
       "isPauseGame",
+      "gameActions",
     ]),
+    lastChar() {
+      return getLastCharOfString(this.activeGame.activeNameEntry);
+    },
+    gameDuration() {
+      return getGameDurationByLevelId(this.gameLevel.id);
+    },
   },
+
   methods: {
     listen() {
-      let diagnosis = new recognition({
-        lang: getLangById(this.gameSettings.languageId).short,
-      });
+      let diagnosis = new recognition({ lang: this.gameLang.short });
       diagnosis.startListen();
     },
+
+    getUserById(id) {
+      return this.gameUsers.filter((user) => user.id == id)[0];
+    },
     isMyTurn() {
-      return this.activeGamePlayer[user].id === this.authUser.id ? true : false;
+      return this.activeGamePlayer.id === this.authUser.id ? true : false;
     },
     setActivePlayer() {
-      if (this.gameUsers[activeGamePlayer[index] + 1]) {
+      console.log('aplater');
+      console.log(this.activeGamePlayerIndex);
+      if (this.gameUsers[this.activeGamePlayerIndex + 1]) {
         this.$store.commit("increaseActivePlayerIndex");
       } else {
         this.$store.commit("resetPlayerIndex");
@@ -244,26 +234,31 @@ export default {
     },
 
     timeIsUp() {
+      console.log("this.speech.diagnosis");
+      console.log(this.speech.diagnosis);
       if (this.isMyTurn()) {
-        gameAction(
-          this.roomSlug,
-          this.speechDiagnosis,
-          this.gameSettings.currentWord
-        ).then((data) => {});
+        this.$store
+          .dispatch(
+            "makeNewGameAction",
+            this.roomSlug,
+            this.speech.diagnosis,
+            this.speech.lastActiveName
+          )
+          .catch((err) => {
+            console.log(err);
+          });
       }
       this.setActivePlayer();
-
       this.$store.commit("isPauseGame", true);
-
-      this.isGamePaused = true;
-      this.$refs[`countDown`].updateTime(gameDuration);
+      this.$refs[`countDown`].updateTime(this.gameDuration);
     },
     countDownUpdated(status) {
-      this.$refs[`countDown${this.activePlayer.id}`][0].updateManuel(
+      this.$refs[`countDown${this.activeGamePlayer.id}`][0].updateManuel(
         status.value
       );
     },
   },
+
   created() {
     this.isMyTurn() ? this.listen() : "";
   },
@@ -271,16 +266,6 @@ export default {
   watch: {
     activeGamePlayer() {
       this.isMyTurn() ? this.listen() : "";
-    },
-    gameAction() {
-      this.isGamePaused = false;
-      if (this.gameAction.action_result.point === 30) {
-        this.gameSettings.currentWord = this.gameAction.action_result.name;
-      } else {
-        this.gameAction.action_result.name = this.gameSettings.currentWord;
-      }
-
-      this.gameSettings.GameActions.push(this.gameAction);
     },
   },
 };

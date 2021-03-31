@@ -1,7 +1,13 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import { login, register, getRoomConfig,startGame } from "../requests/requests";
+import {
+  login,
+  register,
+  getRoomConfig,
+  startGame,
+  gameAction
+} from "../requests/requests";
 Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
@@ -95,15 +101,23 @@ export const store = new Vuex.Store({
     },
 
     setGameActioData(state, gameAction) {
-      state.game.active.actions.push(gameAction);
+      gameAction && gameAction.action_result == 30
+        ? (state.game.speech.lastActiveName = gameAction.action_result.name)
+        : "";
+      state.game.room.isGamePaused = false;
+      state.game.active.gameActions.push(gameAction);
     },
     increaseActivePlayerIndex(state) {
+        console.log('increase index');
       state.game.active.activePlayerIndex++;
     },
     resetPlayerIndex(state) {
+        console.log('zero index');
+
       state.game.active.activePlayerIndex = 0;
     },
   },
+
   actions: {
     //auth actions
     login({ commit }, credentials) {
@@ -120,12 +134,11 @@ export const store = new Vuex.Store({
       commit("clearUserData");
     },
     //game actions
-
     startTheGameForEveryOne({ commit }, roomSlug) {
-        return startGame(roomSlug).then((data) => {
-          commit("isStartGame", true);
-        });
-      },
+      return startGame(roomSlug).then((data) => {
+        commit("isStartGame", true);
+      });
+    },
     getRoomConfigByRoomSlug({ commit }, roomSlug) {
       return getRoomConfig(roomSlug).then((data) => {
         commit("setGameRoomConfigIfKeyExist", data.config);
@@ -140,29 +153,31 @@ export const store = new Vuex.Store({
       commit("removeGameUser", user);
       commit("sortUsers");
     },
+    makeNewGameAction({state}) {
+        return gameAction(state.game.room.slug, state.game.speech.diagnosis, state.game.speech.lastActiveName).then((data) => {
+        state.game.speech.diagnosis="";
+        state.game.speech.currentState="";
+      })
+    },
   },
+
   getters: {
     isLogged: (state) => !!state.user,
     userToken: (state) => state.user.token,
     authUser: (state) => state.user.user,
 
-    speechState: (state) => state.game.speech.currentState,
-    speechDiagnosis: (state) => state.game.speech.diagnosis,
+    speech: (state) => state.game.speech,
 
     gameSettings: (state) => state.game.settings,
     gameRoom: (state) => state.game.room,
     gameRoomHosterId: (state) => state.game.room.created_by,
     activeGame: (state) => state.game.active,
+    gameActions: (state) => state.game.active.gameActions,
 
     gameUsers: (state) => state.game.active.users,
-    activeGamePlayer: (state) => [
-      (user) =>
-        state.game.active.users[
-          (state.game.active.activePlayerIndex,
-          (index) => state.game.activePlayerIndex)
-        ],
-    ],
-    getUserById: (state, id) =>
-      state.game.active.users.filter((user) => user.id == id)[0],
+    activeGamePlayerIndex: (state) => state.game.active.activePlayerIndex,
+    activeGamePlayer: (state) =>
+      state.game.active.users[state.game.active.activePlayerIndex],
+    
   },
 });
