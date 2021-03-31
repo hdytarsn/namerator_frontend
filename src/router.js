@@ -110,7 +110,10 @@ const routes = [
     }, {
         path: "/:catchAll(.*)",
         name: "notFound",
-        component: NotFound
+        components: {
+            header: AppHeader,
+            default: NotFound,
+        }
     }
 ];
 const router = new Router({
