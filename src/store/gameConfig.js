@@ -3,22 +3,22 @@ export const gameConfig = Object.freeze({
         {
             id: 1,
             name: "Çaylak",
-            img: "https://demos.creative-tim.com/argon-design-system/assets/img/icons/flags/US.png"
+            img: "/img/icons/level1.png"
         },
         {
             id: 2,
             name: "Amatör",
-            img: "https://demos.creative-tim.com/argon-design-system/assets/img/icons/flags/US.png"
+            img: "/img/icons/level2.png"
         },
         {
             id: 3,
             name: "Usta",
-            img: "https://demos.creative-tim.com/argon-design-system/assets/img/icons/flags/US.png"
+            img: "/img/icons/level3.png"
         },
         {
             id: 4,
             name: "Uzman",
-            img: "https://demos.creative-tim.com/argon-design-system/assets/img/icons/flags/US.png"
+            img: "/img/icons/level4.png"
         },
     ],
     SPEECH_LANGUAGES: [
@@ -26,13 +26,13 @@ export const gameConfig = Object.freeze({
             id: 1,
             name: "Türkçe",
             short: "tr",
-            img: "https://demos.creative-tim.com/argon-design-system/assets/img/icons/flags/TR.png"
+            img: "/img/icons/tr.png"
         },
         {
             id: 2,
             name: "İngilizce",
             short: "en",
-            img: "https://demos.creative-tim.com/argon-design-system/assets/img/icons/flags/US.png"
+            img: "/img/icons/us.png"
         },
     ],
     GAME_DURATIONS_BY_LEVEL: [

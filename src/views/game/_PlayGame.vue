@@ -25,7 +25,7 @@
                 <div class="text-center">
                   <div v-show="!isMyTurn()">
                     <img
-                      v-lazy="activeGamePlayer.img"
+                      v-lazy="'/img/user/gamer-boy.png'"
                       alt="Circle image"
                       class="img-fluid rounded-circle shadow"
                       style="width: 150px"
@@ -117,7 +117,7 @@
                       ></count-down>
                       <div v-show="activeGamePlayer.id !== user.id">
                         <img
-                          v-lazy="user.img"
+                          v-lazy="'/img/user/gamer-boy.png'"
                           alt="Circle image"
                           class="img-fluid rounded-circle shadow"
                           style="width: 40px"
@@ -137,7 +137,7 @@
             shadow
             header-classes="bg-white pb-5"
             body-classes="px-lg-5 py-lg-5"
-            class="border-0 mt-5"
+            class="border-0 mt-4 scroll"
           >
             <template>
               <table class="table table-striped table-hover">
@@ -149,7 +149,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="action in gameActions" class="">
+                  <tr v-for="action in gameActions" >
                     <td>
                       {{ getUserById(action.action_result.user_id).name }}
                     </td>
@@ -204,7 +204,7 @@ export default {
       "gameActions",
     ]),
     lastChar() {
-      return getLastCharOfString(this.activeGame.activeNameEntry);
+      return getLastCharOfString(this.speech.lastActiveName);
     },
     gameDuration() {
       return getGameDurationByLevelId(this.gameLevel.id);
@@ -248,8 +248,12 @@ export default {
             console.log(err);
           });
       }
-      this.setActivePlayer();
       this.$store.commit("isPauseGame", true);
+console.log('this.gameRoom.isGamePaused');
+console.log(this.gameRoom.isGamePaused);
+
+      this.setActivePlayer();
+      
       this.$refs[`countDown`].updateTime(this.gameDuration);
     },
     countDownUpdated(status) {
@@ -264,9 +268,19 @@ export default {
   },
 
   watch: {
+    gameRoom(){
+console.log('this.gameRoom.isGamePaused');
+console.log(this.gameRoom.isGamePaused)
+    },
     activeGamePlayer() {
       this.isMyTurn() ? this.listen() : "";
     },
   },
 };
 </script>
+<style scoped>
+.scroll{
+  max-height: 250px;
+  overflow-y: scroll;
+}
+</style>

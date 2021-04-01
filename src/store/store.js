@@ -86,10 +86,10 @@ export const store = new Vuex.Store({
     },
 
     isStartGame(state, bool) {
-      state.game.active.isGameStarted = bool;
+      state.game.room.isGameStarted = bool;
     },
     isPauseGame(state, bool) {
-      state.game.active.isGamePaused = bool;
+      state.game.room.isGamePaused = bool;
     },
 
     setSpeechData(state, speechData) {
@@ -101,19 +101,18 @@ export const store = new Vuex.Store({
     },
 
     setGameActioData(state, gameAction) {
-      gameAction && gameAction.action_result == 30
+      console.log(gameAction);
+      gameAction.action_result.point == 30
         ? (state.game.speech.lastActiveName = gameAction.action_result.name)
         : "";
+        console.log(state.game.speech.lastActiveName);
       state.game.room.isGamePaused = false;
       state.game.active.gameActions.push(gameAction);
     },
     increaseActivePlayerIndex(state) {
-        console.log('increase index');
       state.game.active.activePlayerIndex++;
     },
     resetPlayerIndex(state) {
-        console.log('zero index');
-
       state.game.active.activePlayerIndex = 0;
     },
   },
