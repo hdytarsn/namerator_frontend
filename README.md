@@ -11,7 +11,7 @@
     <img src="http://game.namerator.fun/img/logo/logo-bk.png" alt="Logo" width="350">
   </a>
   <p align="center">
-Namerator is a graduation project prepared for the Kodluyoruz-Atölye15 javascript bootcamp.
+Namerator is a graduation project prepared for the Kodluyoruz-Atölye15 javascript bootcamp. 🎓
     <br />
     <br />
     <a href="http://game.namerator.fun/">View Demo</a>
@@ -27,6 +27,7 @@ Namerator is a graduation project prepared for the Kodluyoruz-Atölye15 javascri
     <li><a href="#notes">Notes</a></li>
     <li><a href="#built-with">Built With</a></li>
     <li><a href="#installation">Installation</a></li>
+    <li><a href="#message-to-atolye15">Message To Atölye15</a></li>
     <li><a href="#thanks">Thanks</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -89,6 +90,21 @@ password: kodluyoruz
    npm run build
    ```
 
+
+## Message to Atolye 15!
+
+Hello there! 
+It was the first project of many things for me.
+<ul>
+<li>It's my first VueJs project which i created (except basic todo apps 🤪)</li>
+<li>It's my first API Authenticated project.</li>
+<li>It's my first Web Socket project</li>
+<li>The first project given by by Atölye15. I hope i can get more in future... 😍</li>
+</ul>
+I know it doesn't include the exac requested project, but I wanted to try something different and learn new techs. 💡
+There is still lots of bugs on project 🤫 but this is the only project i've had fun working on in a long time so i will continue to develop!
+<br>
+I hope one day it will be possible to write code💡 and do crazy stuff🤘 together in the office. 🤝🤝🤝
 
 ## Thanks!
 Special thanks to [Atölye15](https://www.atolye15.com) and [Kodluyoruz](https://www.kodluyoruz.org) 
