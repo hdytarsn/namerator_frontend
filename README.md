@@ -102,7 +102,7 @@ It was the first project of many things for me.
 <li>And the first project given by Atölye15. I hope i can get more in future... 😍</li>
 </ul>
 I know it doesn't include the exac requested project, but I wanted to try something different and learn new techs. 💡
-There is still lots of bugs on project 🤫 but this is the only project i've had fun working on in a long time so i will continue to develop!
+There is still lots of bugs on project 🤫 but this is the only project i've had fun working on in a long time<br> so i will continue to develop!
 <br>
 I hope one day it will be possible to write code💡 and do crazy stuff🤘 together in the office. 🤝🤝🤝
 
