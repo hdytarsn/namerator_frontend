@@ -99,7 +99,7 @@ It was the first project of many things for me.
 <li>It's my first VueJs project which i created (except basic todo apps 🤪)</li>
 <li>It's my first API Authenticated project.</li>
 <li>It's my first Web Socket project</li>
-<li>The first project given by by Atölye15. I hope i can get more in future... 😍</li>
+<li>And the first project given by Atölye15. I hope i can get more in future... 😍</li>
 </ul>
 I know it doesn't include the exac requested project, but I wanted to try something different and learn new techs. 💡
 There is still lots of bugs on project 🤫 but this is the only project i've had fun working on in a long time so i will continue to develop!
