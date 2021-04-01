@@ -53,7 +53,7 @@ password: kodluyoruz
 * [Argon UI Kit](https://github.com/creativetimofficial/vue-argon-design-system)
 * [Laravel Echo](https://github.com/laravel/echo)
 * [Socket IO](https://socket.io/)
-* [NPM)](https://www.npmjs.com/)
+* [NPM](https://www.npmjs.com/)
 
 ### Installation
 
