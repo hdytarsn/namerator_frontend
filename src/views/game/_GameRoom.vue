@@ -34,7 +34,7 @@
                 class="col-md-4 room-user"
               >
                 <img
-                  v-lazy="'/img/theme/team-2-800x800.jpg'"
+                  v-lazy="'/img/user/gamer-boy.png'"
                   alt="Circle image"
                   class="img-fluid rounded-circle shadow pos-relative"
                   style="width: 150px"
@@ -48,6 +48,14 @@
               </div>
             </div>
           </card>
+            <div>
+            <p
+              v-if="errorMessage"
+              class="alert text-center font-weight-bold alert-danger mt-2"
+            >
+              {{ errorMessage }}
+            </p>
+          </div>
         </div>
         <div class="col-lg-12">
           <base-button
@@ -74,12 +82,13 @@ export default {
   props: {
     roomConfig: Object,
     roomSlug: String,
-    gameLang:Object,
-    gameLevel:Object
+    gameLang: Object,
+    gameLevel: Object,
   },
   data() {
     return {
       invitationLink: window.location.href,
+      errorMessage:""
     };
   },
   computed: {
@@ -96,11 +105,20 @@ export default {
 
   methods: {
     startGame() {
-      this.$store
-        .dispatch("startTheGameForEveryOne", this.roomSlug)
-        .catch((err) => {
-          console.log(err);
-        });
+      if (this.gameUsers.length > 1) {
+        this.$store
+          .dispatch("startTheGameForEveryOne", this.roomSlug)
+          .catch((err) => {
+            console.log(err);
+          });
+      }else{
+         this.errorMessage =
+          "Oyuna başlayabilmek için minimum 2 kişi olmalısınız!";
+        setTimeout(() => {
+          this.errorMessage=""
+        }, 3500);
+        
+      }
     },
   },
 };

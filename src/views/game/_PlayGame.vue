@@ -224,8 +224,6 @@ export default {
       return this.activeGamePlayer.id === this.authUser.id ? true : false;
     },
     setActivePlayer() {
-      console.log('aplater');
-      console.log(this.activeGamePlayerIndex);
       if (this.gameUsers[this.activeGamePlayerIndex + 1]) {
         this.$store.commit("increaseActivePlayerIndex");
       } else {
@@ -234,8 +232,6 @@ export default {
     },
 
     timeIsUp() {
-      console.log("this.speech.diagnosis");
-      console.log(this.speech.diagnosis);
       if (this.isMyTurn()) {
         this.$store
           .dispatch(
@@ -249,11 +245,7 @@ export default {
           });
       }
       this.$store.commit("isPauseGame", true);
-console.log('this.gameRoom.isGamePaused');
-console.log(this.gameRoom.isGamePaused);
-
       this.setActivePlayer();
-      
       this.$refs[`countDown`].updateTime(this.gameDuration);
     },
     countDownUpdated(status) {
@@ -268,10 +260,6 @@ console.log(this.gameRoom.isGamePaused);
   },
 
   watch: {
-    gameRoom(){
-console.log('this.gameRoom.isGamePaused');
-console.log(this.gameRoom.isGamePaused)
-    },
     activeGamePlayer() {
       this.isMyTurn() ? this.listen() : "";
     },

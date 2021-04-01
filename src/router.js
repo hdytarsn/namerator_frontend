@@ -5,7 +5,6 @@ import AppHeader from "./layout/AppHeader";
 import AppFooter from "./layout/AppFooter";
 import Home from "./views/game/Home.vue";
 import HowToPlay from "./views/information/HowToPlay.vue";
-import GameRules from "./views/information/GameRules.vue";
 import GameSettings from "./views/game/GameSettings";
 import GameRoom from "./views/game/_GameRoom";
 import GameRoot from "./views/game/GameRoot";
@@ -32,15 +31,6 @@ const routes = [
         components: {
             header: AppHeader,
             default: HowToPlay,
-            footer: AppFooter
-        }
-    },
-    {
-        path: "/game-rules",
-        name: "gameRules",
-        components: {
-            header: AppHeader,
-            default: GameRules,
             footer: AppFooter
         }
     },

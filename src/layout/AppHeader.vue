@@ -33,16 +33,6 @@
                   oynayabileceğiniz bir isim bulma oyunudur.</p>
               </div>
             </router-link>
-            <router-link class="media d-flex align-items-center" :to="{name:'gameRules'}">
-              <div class="icon icon-shape bg-gradient-warning rounded-circle text-white">
-                <i class="ni ni-ui-04"></i>
-              </div>
-              <div class="media-body ml-3">
-                <h5 class="heading text-warning mb-md-1">Kurallar</h5>
-                <p class="description d-none d-md-inline-block mb-0">Oyunu oynarken uymanız gereken kurallar ve
-                  puanlandırma seçenekleri.</p>
-              </div>
-            </router-link>
           </div>
         </base-dropdown>
       </ul>

@@ -55,7 +55,7 @@ export const store = new Vuex.Store({
     //game mutations
     setGameUser(state, user) {
       user.point = 0; //set every new user game point to 0
-      state.game.active.users.push(user);
+      state.game.active.users.indexOf(user) === -1 ? state.game.active.users.push(user) : console.log("This user already exists");
     },
     removeGameUser(state, user) {
       let index = state.game.active.users
@@ -105,8 +105,8 @@ export const store = new Vuex.Store({
       gameAction.action_result.point == 30
         ? (state.game.speech.lastActiveName = gameAction.action_result.name)
         : "";
-        console.log(state.game.speech.lastActiveName);
       state.game.room.isGamePaused = false;
+      state.game.active.users.filter((user) => user.id == gameAction.action_result.user_id)[0].point+=gameAction.action_result.point;
       state.game.active.gameActions.push(gameAction);
     },
     increaseActivePlayerIndex(state) {

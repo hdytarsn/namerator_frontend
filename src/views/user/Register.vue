@@ -21,7 +21,7 @@
               <template>
                 <div class="text-center">
                   <router-link slot="brand" to="/">
-                    <img src="img/brand/blue.png" class="logo" alt="logo">
+                    <img src="/img/logo/logo-bk.png" class="logo" alt="logo">
                   </router-link>
                 </div>
               </template>
@@ -33,22 +33,22 @@
               <form role="form" @keyup.enter="register">
                 <base-input alternative v-model="name"  @click="errorMessage=''"
                             class="mb-3"
-                            placeholder="Name"
+                            placeholder="Ad-Soyad"
                             addon-left-icon="ni ni-hat-3">
                 </base-input>
                 <base-input alternative v-model="email"  @click="errorMessage=''"
                             class="mb-3"
-                            placeholder="Email"
+                            placeholder="E-Posta"
                             addon-left-icon="ni ni-email-83">
                 </base-input>
                 <base-input alternative v-model="password"  @click="errorMessage=''"
                             type="password"
-                            placeholder="Password"
+                            placeholder="Şifre"
                             addon-left-icon="ni ni-lock-circle-open">
                 </base-input>
                 <base-input alternative v-model="passwordConfirmation"  @click="errorMessage=''"
                             type="password"
-                            placeholder="Password Confirmation"
+                            placeholder="Şifre Tekrar"
                             addon-left-icon="ni ni-lock-circle-open">
                 </base-input>
                 <base-alert type="danger" v-text="errorMessage" v-if="errorMessage"></base-alert>

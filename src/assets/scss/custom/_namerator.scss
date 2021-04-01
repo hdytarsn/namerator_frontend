@@ -14,14 +14,15 @@ main .vh100 {
   justify-content: center;
 }
 .room-user > div {
-margin-top: -25px;
+margin-top: -15px;
 }
 .room-user span {
- background: darkorchid;
+ background: rgb(140, 157, 241);
  color:#fff;
- padding: 5px 25px ;
+ font-size:14px;
+ padding: 5px 20px ;
  border-radius: 10px;
- font-weight: 900;
+ font-weight: 700;
 }
 
 .currentWord {

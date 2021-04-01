@@ -20,7 +20,7 @@
             <template>
               <div class="text-center">
                 <router-link slot="brand" to="/">
-                  <img src="img/brand/blue.png" class="logo" alt="logo">
+                  <img src="/img/logo/logo-bk.png" class="logo" alt="logo">
                 </router-link>
               </div>
             </template>
@@ -31,12 +31,12 @@
               <form role="form" @keyup.enter="login">
                 <base-input alternative required v-model="email"  @click="errorMessage=''"
                             class="mb-3"
-                            placeholder="Email"
+                            placeholder="E-Posta"
                             addon-left-icon="ni ni-email-83">
                 </base-input>
                 <base-input alternative required v-model="password" @click="errorMessage=''"
                             type="password"
-                            placeholder="Password"
+                            placeholder="Şifre"
                             addon-left-icon="ni ni-lock-circle-open">
                 </base-input>
                 <base-alert type="danger" v-text="errorMessage" v-if="errorMessage"></base-alert>

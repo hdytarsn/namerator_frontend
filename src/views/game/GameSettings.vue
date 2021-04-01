@@ -94,20 +94,21 @@
                     </div>
                   </div>
                   <p class="badge badge-lg wd-100p badge-primary mt-3">
-                    Oyun Türünü Seç!
+                    Oyun Türünü Seç! (Bireysel Oyun Seçeneği Çok Yakında!)
                   </p>
                   <div class="row no-gutters game-level-buttons">
-                    <div class="col-sm-6 px-1">
+                   <!-- <div class="col-sm-6 px-1">
                       <base-button
+                      disabled
                         @click="gameSettings.multiplayer = false"
                         class="wd-100p mb-2"
                         :type="gameSettings.multiplayer ? 'neutral' : 'success'"
                       >
                         <img slot="icon" src="" />
-                        Bireysel
+                        Bireysel (Henüz Tamamlanmadı)
                       </base-button>
-                    </div>
-                    <div class="col-sm-6 px-1">
+                    </div> -->
+                    <div class="col-sm-12 px-1">
                       <base-button
                         @click="gameSettings.multiplayer = true"
                         class="wd-100p mb-2"
@@ -210,6 +211,10 @@ import { createRoomWithGameSettings } from "../../requests/requests";
 import { mapGetters } from "vuex";
 
 export default {
+    components: {
+    BaseInput,
+    BaseDropdown,
+  },
   data() {
     return {
       gameLevels: gameConfig.LEVELS,
@@ -219,7 +224,7 @@ export default {
         username: "",
         levelId: "",
         languageId: "",
-        multiplayer: false,
+        multiplayer: true,
         gameRoom: {
           status: 0, //1>hazırlanıyor(http request, 2>hazır)
           id: null,
@@ -228,9 +233,8 @@ export default {
       },
     };
   },
-  components: {
-    BaseInput,
-    BaseDropdown,
+ computed: {
+    ...mapGetters(["isLogged","authUser"]),
   },
   methods: {
     setGameLevel(gameLevel) {
@@ -271,9 +275,7 @@ export default {
     this.gameSettings.levelId = gameConfig.LEVELS[0].id;
     this.gameSettings.languageId = gameConfig.SPEECH_LANGUAGES[0].id;
   },
-  computed: {
-    ...mapGetters(["isLogged"]),
-  },
+ 
 };
 </script>
 <style scoped>

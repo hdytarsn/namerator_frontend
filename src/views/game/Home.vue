@@ -18,7 +18,7 @@
           <div class="row justify-content-center align-items-center">
             <div class="col-lg-7 text-center pt-lg">
               <img src="/img/logo/logo-wh.png" style="width: 400px;" class="img-fluid">
-              <p class="lead text-white mt-4 mb-5"><b>Namerator</b> bilgisayara karşı ya da arkadaşlarınızla oynayabileceğiniz bir isim bulma oyunudur.</p>
+              <p class="lead text-white mt-4 mb-5"><b>Namerator</b> arkadaşlarınızla online oynayabileceğiniz<br>bir isim bulma oyunudur.</p>
               <div class="btn-wrapper">
                 <router-link :to="{name:'gameSettings' }" class="btn btn-info">Hemen Oyna!</router-link>
               </div>
