@@ -7,6 +7,7 @@ import { store } from './store/store'
 import axios from "axios";
 import {constants} from './store/constants';
 import Echo from 'laravel-echo';
+
 axios.defaults.baseURL = constants.API_BASE_URL;
 window.axios = require('axios').default;
 window.Pusher = require('pusher-js');
@@ -15,9 +16,9 @@ window.echo = new Echo({
     key: constants.PUSHER_APP_KEY,
     cluster: constants.PUSHER_CLUSTER,
     forceTLS: true,
-    wsHost: 'http://namerator.test/api',
-    authHost: "http://namerator.test/api",
-    authEndpoint:'http://namerator.test/api/broadcasting/auth',
+    wsHost: constants.API_BASE_URL,
+    authHost: constants.API_BASE_URL,
+    authEndpoint:`${constants.API_BASE_URL}/broadcasting/auth`,
 });
 Vue.config.productionTip = false;
 Vue.use(Argon);
