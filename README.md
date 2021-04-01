@@ -27,7 +27,7 @@ Namerator is a graduation project prepared for the Kodluyoruz-Atölye15 javascri
     <li><a href="#notes">Notes</a></li>
     <li><a href="#built-with">Built With</a></li>
     <li><a href="#installation">Installation</a></li>
-    <li><a href="#message-to-atolye15">Message To Atölye15</a></li>
+    <li><a href="#message-to-atolye-15">Message To Atölye15</a></li>
     <li><a href="#thanks">Thanks</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -91,7 +91,7 @@ password: kodluyoruz
    ```
 
 
-## Message to Atolye 15!
+## Message to Atölye 15!
 
 Hello there! 
 It was the first project of many things for me.
