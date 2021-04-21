@@ -10,16 +10,15 @@
   <a href="https://github.com/hdytarsn/namerator_frontend">
     <img src="https://game.namerator.fun/img/logo/logo-bk.png" alt="Logo" width="350">
   </a>
-  <p align="center">
-Namerator is a graduation project prepared for the Kodluyoruz-Atölye15 javascript bootcamp. 🎓
+<p align="center"><b>(In Development)</b><p>
+      
+<p align="center">"Namerator" is a simple name finding game that you can play multiplayer or single player.<br>
+It's a weekend project to develop myself in different technologies <a href="#built-with">see below</a>.
     <br />
     <br />
     <a href="https://game.namerator.fun/">View Demo</a>
-      <br>
-        <p align="center">(You can play locally & on demo)</p>
   </p>
 </p>
-
 
 <details open="open">
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
@@ -27,7 +26,6 @@ Namerator is a graduation project prepared for the Kodluyoruz-Atölye15 javascri
     <li><a href="#notes">Notes</a></li>
     <li><a href="#built-with">Built With</a></li>
     <li><a href="#installation">Installation</a></li>
-    <li><a href="#message-to-atölye-15">Message To Atölye15</a></li>
     <li><a href="#thanks">Thanks</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -37,14 +35,14 @@ Namerator is a graduation project prepared for the Kodluyoruz-Atölye15 javascri
 ## Notes
 
 Projects base configration (store/constants) set to deployed backend routes so you can play without local backend setup.
-Single player mode not okay right now so only multiplayer mode open in backend and front end.
+Single player mode in development right now so only multiplayer mode open in backend and frontend.
 You can sign up to play (no email confirmation) or predefined users:
 
-mail: atolye15@atolye15.com
-password: atolye15
+mail: userone@namerator.fun
+password: userone
 
-mail: kodluyoruz@kodluyoruz.com
-password: kodluyoruz
+mail: usertwo@namerator.fun
+password: usertwo
 
 
 ## Built With
@@ -76,9 +74,9 @@ password: kodluyoruz
    ```sh
     NODE_ENV:"development",
     BASE_URL:"http://localhost:8080",
-    API_BASE_URL: "http://namerator.fun/api",
-    PUSHER_APP_KEY: "8cf0e37a457627fb2630",
-    PUSHER_CLUSTER: "eu"
+    API_BASE_URL: "https://namerator.fun/api", // if you use local backend setup change like "http://localhost:8080/api"
+    PUSHER_APP_KEY: "****",
+    PUSHER_CLUSTER: "**"
    ```
  
 4. Serve on local machine
@@ -90,24 +88,8 @@ password: kodluyoruz
    npm run build
    ```
 
-
-## Message to Atölye 15!
-
-Hello there! 
-It was the first project of many things for me.
-<ul>
-<li>It's my first VueJs project which i created (except basic todo apps 🤪)</li>
-<li>It's my first API Authenticated project.</li>
-<li>It's my first Web Socket project</li>
-<li>And the first project given by Atölye15. I hope i can get more in future... 😍</li>
-</ul>
-I know it doesn't include the exac requested project, but I wanted to try something different and learn new techs. 💡
-There is still lots of bugs on project 🤫 but this is the only project i've had fun working on in a long time<br> so i will continue to develop!
-<br>
-I hope one day it will be possible to write code💡 and do crazy stuff🤘 together in the office. 🤝🤝🤝
-
 ## Thanks!
-Special thanks to [Atölye15](https://www.atolye15.com) and [Kodluyoruz](https://www.kodluyoruz.org) 
+Special thanks to [Atölye15](https://www.atolye15.com) for evaluating the code and project idea, and [Kodluyoruz](https://www.kodluyoruz.org) for the best JavaScript bootcamp!
 
 
 ## Contact
